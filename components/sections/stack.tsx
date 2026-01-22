@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import { getAssetPath } from "@/lib/utils"
 
 const featuredProjects = [
   {
@@ -9,7 +10,7 @@ const featuredProjects = [
     category: "Financial Markets",
     description: "Autonomous signal generation, multi-agent decision-making, and risk-aware execution for trading desks.",
     tags: ["Quant Trading", "Risk Management", "ML/AI"],
-    image: "/quant-trading-dashboard.png",
+    image: getAssetPath("/quant-trading-dashboard.png"),
     link: "/portfolio?category=Enterprise+AI",
   },
   {
@@ -17,8 +18,8 @@ const featuredProjects = [
     category: "Voice AI",
     description: "24/7 restaurant reservation system with natural conversation, real-time availability, and SMS confirmations.",
     tags: ["Voice AI", "SIP/VAPI", "Automation"],
-    imageLight: "/voice-agent-light.png",
-    imageDark: "/voice-agent-dark.png",
+    imageLight: getAssetPath("/voice-agent-light.png"),
+    imageDark: getAssetPath("/voice-agent-dark.png"),
     link: "/portfolio?category=Agents",
   },
   {
