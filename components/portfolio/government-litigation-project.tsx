@@ -1,3 +1,5 @@
+import { getAssetPath } from "@/lib/utils"
+
 export function GovernmentLitigationProject() {
     return (
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -67,7 +69,7 @@ export function GovernmentLitigationProject() {
             <div className="order-1 md:order-1">
                 <div className="aspect-video bg-muted/30 rounded-lg border border-border overflow-hidden">
                     <img
-                        src="/government-litigation-dashboard.png"
+                        src={getAssetPath("/government-litigation-dashboard.png")}
                         alt="Government Litigation & Case Management System Dashboard showing case management, multi-user access, and subdivision dashboards"
                         className="w-full h-full object-cover"
                     />

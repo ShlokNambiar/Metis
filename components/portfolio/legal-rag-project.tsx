@@ -1,3 +1,5 @@
+import { getAssetPath } from "@/lib/utils"
+
 export function LegalRAGProject() {
     return (
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -81,7 +83,7 @@ export function LegalRAGProject() {
             <div className="order-1 md:order-1">
                 <div className="aspect-video bg-muted/30 rounded-lg border border-border overflow-hidden">
                     <img
-                        src="/legal-rag-workflow.png"
+                        src={getAssetPath("/legal-rag-workflow.png")}
                         alt="Legal RAG workflow diagram showing document processing and case automation"
                         className="w-full h-full object-cover"
                     />

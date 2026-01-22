@@ -1,3 +1,5 @@
+import { getAssetPath } from "@/lib/utils"
+
 export function QuantTradingEnterpriseProject() {
     return (
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -56,7 +58,7 @@ export function QuantTradingEnterpriseProject() {
             <div className="order-2 md:order-2">
                 <div className="aspect-video bg-muted/30 rounded-lg border border-border overflow-hidden">
                     <img
-                        src="/quant-trading-dashboard.png"
+                        src={getAssetPath("/quant-trading-dashboard.png")}
                         alt="AI Trading Dashboard showing active positions, trade history, and equity curve"
                         className="w-full h-full object-cover"
                     />

@@ -1,3 +1,5 @@
+import { getAssetPath } from "@/lib/utils"
+
 export function RestaurantVoiceAgentProject() {
     return (
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -86,13 +88,13 @@ export function RestaurantVoiceAgentProject() {
                 <div className="aspect-video bg-muted/30 rounded-lg border border-border overflow-hidden relative">
                     {/* Light mode image */}
                     <img
-                        src="/voice-agent-light.png"
+                        src={getAssetPath("/voice-agent-light.png")}
                         alt="Voice AI interface with glowing orb - light mode"
                         className="w-full h-full object-cover dark:hidden"
                     />
                     {/* Dark mode image */}
                     <img
-                        src="/voice-agent-dark.png"
+                        src={getAssetPath("/voice-agent-dark.png")}
                         alt="Voice AI interface with glowing orb - dark mode"
                         className="w-full h-full object-cover hidden dark:block"
                     />
