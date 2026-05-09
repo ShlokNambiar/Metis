@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>We built a system that watches 206 stocks simultaneously</title>
+</head>
+<body style="margin:0;padding:0;background:#f0f4f8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f4f8;">
+<tr><td align="center" style="padding:24px 16px;">
+
+  <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+    <!-- HEADER -->
+    <tr>
+      <td style="background:#1359a0;padding:20px 32px;text-align:center;">
+        <div style="display:inline-block;vertical-align:middle;margin-right:10px;">
+          <svg width="28" height="34" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="6" r="6" fill="white"/>
+            <circle cx="8" cy="22" r="6" fill="white"/>
+            <circle cx="32" cy="22" r="6" fill="white"/>
+            <circle cx="20" cy="42" r="6" fill="white"/>
+            <line x1="20" y1="12" x2="20" y2="18" stroke="white" stroke-width="3"/>
+            <line x1="14" y1="22" x2="26" y2="22" stroke="white" stroke-width="3"/>
+            <line x1="12" y1="26" x2="18" y2="36" stroke="white" stroke-width="3"/>
+            <line x1="28" y1="26" x2="22" y2="36" stroke="white" stroke-width="3"/>
+            <circle cx="20" cy="22" r="4" fill="white"/>
+          </svg>
+        </div>
+        <span style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#ffffff;letter-spacing:0.18em;vertical-align:middle;">METIS</span>
+        <div style="color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.12em;margin-top:4px;">INTELLIGENCE IN MOTION</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="background:#0d4a8a;padding:10px 32px;text-align:center;">
+        <span style="color:#a8c8f0;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;">Case Study · Financial Markets</span>
+      </td>
+    </tr>
+
+    <!-- BODY -->
+    <tr>
+      <td style="padding:36px 36px 0 36px;">
+
+        <h1 style="font-size:26px;font-weight:700;color:#0f172a;line-height:1.25;margin:0 0 20px 0;">
+          We built a trading system that watches<br>206 stocks. Simultaneously. Automatically.
+        </h1>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          Here is a question that kept coming up in a conversation we had with a fund manager earlier this year:
+        </p>
+
+        <p style="font-size:15px;color:#1359a0;font-style:italic;font-weight:600;line-height:1.7;margin:0 0 16px 0;padding-left:16px;border-left:3px solid #1359a0;">
+          "The Indian F&O market has 206 eligible stocks. I can realistically watch maybe 10 at a time. The other 196 are opportunities I am completely blind to."
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          That is not a discipline problem. That is a physics problem. Human attention is finite. The market is not.
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 24px 0;">
+          So we built a system that solves it.
+        </p>
+
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+          <tr><td style="border-top:1px solid #e5e7eb;"></td></tr>
+        </table>
+
+        <h2 style="font-size:20px;font-weight:700;color:#1359a0;margin:0 0 16px 0;">The EOS Strategy — Exhaustion of Strength</h2>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          At the core of the system is a contrarian thesis: when a stock makes a sharp move — up or down — with heavy institutional participation behind it, that move is often reaching its limit. The smart money got in early. Late buyers are piling in now. The reversal conditions are ripe.
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          When a stock surges more than 2% with significant Open Interest buildup, the system buys a Put. When it drops under the same conditions, it buys a Call. It never enters blindly — it waits for confirmation on the next candle.
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 24px 0;">
+          It applies this logic to all 206 F&O stocks. Simultaneously. In milliseconds.
+        </p>
+
+        <!-- STATS ROW -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+          <tr>
+            <td width="25%" style="padding:0 6px 0 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td style="border:1px solid #e5e7eb;border-radius:4px;padding:14px 10px;text-align:center;">
+                  <div style="font-size:22px;font-weight:700;color:#1359a0;line-height:1;">206</div>
+                  <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.4;">stocks<br>monitored</div>
+                </td></tr>
+              </table>
+            </td>
+            <td width="25%" style="padding:0 6px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td style="border:1px solid #e5e7eb;border-radius:4px;padding:14px 10px;text-align:center;">
+                  <div style="font-size:22px;font-weight:700;color:#1359a0;line-height:1;">5</div>
+                  <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.4;">max trades<br>per session</div>
+                </td></tr>
+              </table>
+            </td>
+            <td width="25%" style="padding:0 6px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td style="border:1px solid #e5e7eb;border-radius:4px;padding:14px 10px;text-align:center;">
+                  <div style="font-size:22px;font-weight:700;color:#1359a0;line-height:1;">5 yrs</div>
+                  <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.4;">options data<br>for backtesting</div>
+                </td></tr>
+              </table>
+            </td>
+            <td width="25%" style="padding:0 0 0 6px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td style="border:1px solid #e5e7eb;border-radius:4px;padding:14px 10px;text-align:center;">
+                  <div style="font-size:22px;font-weight:700;color:#1359a0;line-height:1;">0</div>
+                  <div style="font-size:11px;color:#6b7280;margin-top:4px;line-height:1.4;">overnight<br>positions</div>
+                </td></tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+          <tr><td style="border-top:1px solid #e5e7eb;"></td></tr>
+        </table>
+
+        <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 16px 0;">The part that makes it different from every other algo</h2>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          Before any trade is entered, the system consults an AI model. Not to predict the market — but to review the signal in context. Is this a good time to be buying options? Does the broader market support this direction? Does anything look off?
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          The AI approves or rejects the trade with a confidence score. Its reasoning is logged in full. Every decision is auditable.
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 24px 0;">
+          This acts as a second set of eyes on every decision — the kind of quality filter a pure rule-based system simply cannot provide.
+        </p>
+
+        <!-- CALLOUT -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+          <tr>
+            <td style="background:#eff6ff;border-left:4px solid #1359a0;padding:16px 20px;border-radius:0 4px 4px 0;">
+              <p style="font-size:14px;color:#0f172a;line-height:1.65;margin:0;">
+                <strong style="color:#1359a0;">What it adds up to:</strong> A system that applies the same logic, the same discipline, and the same risk rules to every trade — across all 206 stocks — with no fatigue, no emotion, no inconsistency. The kind of execution human traders cannot physically sustain.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+          <tr><td style="border-top:1px solid #e5e7eb;"></td></tr>
+        </table>
+
+        <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 12px 0;">Where it is headed next</h2>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 16px 0;">
+          The next phase is a <strong>Market Analyser</strong> that wakes at 5:45 AM on every trading day, ingests global and domestic market data, classifies the market regime, and delivers a written AI briefing with a prioritised watchlist by 8:00 AM — before the market opens.
+        </p>
+
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 24px 0;">
+          The goal: a system that requires zero human intervention from pre-market preparation to end-of-day reconciliation on a typical trading day.
+        </p>
+
+      </td>
+    </tr>
+
+    <!-- CTA -->
+    <tr>
+      <td style="padding:8px 36px 36px 36px;text-align:center;">
+        <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 24px 0;">
+          We build systems like this for trading desks, fund managers, and businesses that need AI to operate at a scale humans cannot. If you are curious what this looks like for your specific context, let's talk.
+        </p>
+        <a href="https://calendly.com/shlok-nambiar/30min" style="display:inline-block;background:#1359a0;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:4px;letter-spacing:0.03em;">Book a Free Discovery Call →</a>
+        <p style="font-size:13px;color:#9ca3af;margin:16px 0 0 0;">Or reply directly — we read every message.</p>
+      </td>
+    </tr>
+
+    <!-- FOOTER -->
+    <tr>
+      <td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:20px 36px;text-align:center;">
+        <p style="font-size:12px;color:#6b7280;margin:0 0 6px 0;">
+          <strong style="color:#1359a0;">METIS AI</strong> &nbsp;·&nbsp; metisai.in &nbsp;·&nbsp; team@metisai.in &nbsp;·&nbsp; +91 9075311677
+        </p>
+        <p style="font-size:11px;color:#9ca3af;margin:0;">
+          You're receiving this because you expressed interest in AI automation.<br>
+          <a href="#" style="color:#9ca3af;">Unsubscribe</a>
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</td></tr>
+</table>
+</body>
+</html>
