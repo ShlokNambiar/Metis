@@ -1,0 +1,5 @@
+/* Metis webfonts — loaded from Google Fonts CDN.
+   Hanken Grotesk  → UI + headings (nearest free match to the site's grotesque, likely PP Neue Montreal / General Sans)
+   Newsreader      → editorial serif for statements & card titles (nearest free match to a Tiempos-style book serif)
+   JetBrains Mono  → utility / code / duration labels */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..800;1,300..800&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;600&display=swap');

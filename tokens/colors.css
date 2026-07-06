@@ -1,0 +1,61 @@
+/* ============================================================
+   METIS — COLOR TOKENS
+   Sampled from the aloa.co marketing site.
+   ============================================================ */
+:root {
+  /* ---- Brand core ---- */
+  --metis-blue:        #1c46ff;  /* the vivid royal-blue wordmark, links, squiggle */
+  --metis-blue-600:    #0f36f0;  /* pressed / darker */
+  --metis-blue-100:    #e4e9ff;  /* tint surface */
+
+  --metis-orange:      #f0562e;  /* primary warm accent — eyebrows, orange cards */
+  --metis-orange-600:  #dc4620;  /* hover / pressed */
+  --metis-orange-100:  #ffe7de;  /* tint surface (e.g. "Watch video" pill on orange) */
+
+  --metis-rust:        #be4a2e;  /* terracotta offering card */
+  --metis-green:       #57c97c;  /* fresh green offering card */
+  --metis-lime:        #dcecac;  /* soft pistachio tutorial row */
+  --metis-lavender:    #e5e1f8;  /* soft lavender tutorial row */
+
+  /* ---- Ink & neutrals (warm-leaning grey) ---- */
+  --metis-ink:         #0e0e0f;  /* near-black — buttons, dark cards, headings */
+  --metis-ink-800:     #1c1c1e;
+  --metis-grey-700:    #44403c;  /* strong body text */
+  --metis-grey-500:    #6b6560;  /* secondary body / muted */
+  --metis-grey-400:    #9a938c;  /* captions, disabled */
+  --metis-grey-300:    #d9d4cd;  /* hairline borders */
+  --metis-grey-200:    #ece8e1;  /* subtle fills */
+  --metis-grey-100:    #f5f2ec;  /* light card / section wash */
+
+  /* ---- Paper ---- */
+  --metis-cream:       #f3efe4;  /* signature warm paper — footer, prototype card */
+  --metis-cream-deep:  #ebe5d6;
+  --metis-white:       #ffffff;
+
+  /* ============================================================
+     SEMANTIC ALIASES
+     ============================================================ */
+  --bg-page:          var(--metis-white);
+  --bg-cream:         var(--metis-cream);
+  --bg-ink:           var(--metis-ink);
+  --surface-card:     var(--metis-white);
+  --surface-muted:    var(--metis-grey-100);
+  --surface-tint:     var(--metis-blue-100);
+
+  --text-strong:      var(--metis-ink);
+  --text-body:        var(--metis-grey-700);
+  --text-muted:       var(--metis-grey-500);
+  --text-faint:       var(--metis-grey-400);
+  --text-on-dark:     var(--metis-white);
+  --text-on-dark-dim: rgba(255,255,255,0.72);
+  --text-link:        var(--metis-blue);
+
+  --accent:           var(--metis-orange);
+  --accent-ink:       var(--metis-blue);
+  --eyebrow:          var(--metis-orange);
+
+  --border-hair:      var(--metis-grey-300);
+  --border-strong:    var(--metis-ink);
+
+  --focus-ring:       var(--metis-blue);
+}

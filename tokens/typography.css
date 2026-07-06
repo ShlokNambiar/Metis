@@ -1,0 +1,52 @@
+/* ============================================================
+   METIS — TYPOGRAPHY TOKENS
+   Grotesque (Hanken) for UI + headings, Serif (Newsreader) for
+   editorial statements & card titles, Mono for utility.
+   Size tokens use the --fs-* prefix; --text-* names are reserved
+   for text COLOUR aliases (see colors.css).
+   ============================================================ */
+:root {
+  /* ---- Families ---- */
+  --font-sans:  "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* ---- Weights ---- */
+  --fw-light:     300; /* @kind other */
+  --fw-regular:   400; /* @kind other */
+  --fw-medium:    500; /* @kind other */
+  --fw-semibold:  600; /* @kind other */
+  --fw-bold:      700; /* @kind other */
+
+  /* ---- Fluid display sizes (grotesque, tight) — hero, h1..h4 ---- */
+  --fs-display:   clamp(2.75rem, 6.2vw, 5.25rem); /* @kind other */
+  --fs-h1:        clamp(2.25rem, 4.4vw, 3.5rem); /* @kind other */
+  --fs-h2:        clamp(1.85rem, 3.4vw, 2.75rem); /* @kind other */
+  --fs-h3:        clamp(1.35rem, 2vw, 1.75rem); /* @kind other */
+  --fs-h4:        1.25rem; /* @kind other */
+
+  /* ---- Serif editorial sizes — footer statement, card titles ---- */
+  --fs-serif-xl:  clamp(2rem, 3.6vw, 3.25rem); /* @kind other */
+  --fs-serif-lg:  1.5rem; /* @kind other */
+  --fs-serif-md:  1.25rem; /* @kind other */
+
+  /* ---- Body / UI ---- */
+  --fs-lead:      1.25rem; /* @kind other */
+  --fs-body:      1.0625rem; /* @kind other */
+  --fs-sm:        0.9375rem; /* @kind other */
+  --fs-xs:        0.8125rem; /* @kind other */
+  --fs-eyebrow:   0.8125rem; /* @kind other */
+
+  /* ---- Line heights ---- */
+  --lh-tight:   1.04; /* @kind other */
+  --lh-snug:    1.15; /* @kind other */
+  --lh-serif:   1.18; /* @kind other */
+  --lh-normal:  1.55; /* @kind other */
+  --lh-relaxed: 1.65; /* @kind other */
+
+  /* ---- Tracking ---- */
+  --ls-display:  -0.02em; /* @kind other */
+  --ls-heading:  -0.015em; /* @kind other */
+  --ls-body:     0; /* @kind other */
+  --ls-eyebrow:  0.14em; /* @kind other */
+}

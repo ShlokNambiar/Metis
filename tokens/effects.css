@@ -1,0 +1,60 @@
+/* ============================================================
+   METIS — EFFECTS: signature motifs + motion
+   ============================================================ */
+:root {
+  /* ---- Motion ---- */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* @kind other */
+  --dur-fast:   140ms;  /* @kind other */
+  --dur-base:   240ms;  /* @kind other */
+  --dur-slow:   440ms;  /* @kind other */
+
+  /* ---- Interaction conventions (documented for reuse) ---- */
+  --hover-lift:  -3px;               /* cards nudge up on hover @kind spacing */
+  --press-scale: 0.97; /* @kind other */
+
+  /* ---- Dot texture (the signature halftone) ---- */
+  --dot-color:   rgba(16,14,12,0.16);
+  --dot-color-on-dark: rgba(255,255,255,0.22);
+  --dot-size:    14px;   /* grid cell @kind spacing */
+  --dot-radius:  1.4px;  /* dot radius @kind spacing */
+}
+
+/* Signature halftone dot field — apply to any surface.
+   Density is uniform here; use .metis-dots--fade for the
+   corner-fade look seen on cards & the footer panel. */
+.metis-dots {
+  background-image: radial-gradient(var(--dot-color) var(--dot-radius), transparent calc(var(--dot-radius) + 0.6px));
+  background-size: var(--dot-size) var(--dot-size);
+  background-position: 0 0;
+}
+/* On dark surfaces: re-paint the dots with the on-dark colour (no token override). */
+.metis-dots--dark {
+  background-image: radial-gradient(var(--dot-color-on-dark) var(--dot-radius), transparent calc(var(--dot-radius) + 0.6px));
+}
+/* Dots that fade in toward the bottom-right corner. */
+.metis-dots--fade {
+  background-image: radial-gradient(var(--dot-color) var(--dot-radius), transparent calc(var(--dot-radius) + 0.6px));
+  background-size: var(--dot-size) var(--dot-size);
+  -webkit-mask-image: radial-gradient(120% 120% at 100% 100%, #000 0%, transparent 62%);
+          mask-image: radial-gradient(120% 120% at 100% 100%, #000 0%, transparent 62%);
+}
+
+/* Signature hand-drawn squiggle underline (brand blue).
+   Wrap an inline phrase: <span class="metis-squiggle">no fluff</span> */
+.metis-squiggle {
+  position: relative;
+  white-space: nowrap;
+}
+.metis-squiggle::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -0.28em;
+  height: 0.32em;
+  background-repeat: repeat-x;
+  background-position: 0 center;
+  background-size: 16px 0.32em;
+  /* a small wavy stroke tile in --metis-blue (#1c46ff) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='6' viewBox='0 0 16 6'%3E%3Cpath d='M0 4 C 3 0.5, 5 0.5, 8 3 S 13 5.5, 16 2' fill='none' stroke='%231c46ff' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+}
