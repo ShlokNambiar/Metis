@@ -12976,17 +12976,34 @@ function Field({
   }, " (optional)")), children);
 }
 function ContactForm() {
-  const [sent, setSent] = useCTState(false);
+  const [status, setStatus] = useCTState("idle");
   const [interest, setInterest] = useCTState("Enterprise AI");
   const submit = e => {
     e.preventDefault();
+    if (status === "sending") return;
     const v = id => (document.getElementById(id) || {}).value || "";
     const subject = "Project inquiry - " + (v("company") || v("name")) + " (" + interest + ")";
-    const body = "Name: " + v("name") + "\nEmail: " + v("email") + "\nCompany: " + (v("company") || "-") + "\nInterest: " + interest + "\n\n" + v("message");
-    window.location.href = "mailto:info@metisai.in?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    setSent(true);
+    setStatus("sending");
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        access_key: "b2b10589-908d-4f5f-af52-7776c26fdb44",
+        subject: subject,
+        from_name: "METIS Website",
+        name: v("name"),
+        email: v("email"),
+        company: v("company") || "-",
+        interest: interest,
+        message: v("message"),
+        botcheck: v("botcheck")
+      })
+    }).then(r => r.json()).then(d => setStatus(d.success ? "sent" : "error")).catch(() => setStatus("error"));
   };
-  if (sent) {
+  if (status === "sent") {
     return /*#__PURE__*/React.createElement("div", {
       style: {
         position: "relative",
@@ -13040,9 +13057,10 @@ function ContactForm() {
         fontWeight: 600,
         fontSize: "var(--fs-h3)",
         letterSpacing: "-0.02em",
+        color: "#fff",
         margin: "0 0 12px"
       }
-    }, "Your message is ready to send."), /*#__PURE__*/React.createElement("p", {
+    }, "Your message is on its way."), /*#__PURE__*/React.createElement("p", {
       style: {
         fontFamily: "var(--font-sans)",
         fontSize: "var(--fs-lead)",
@@ -13051,7 +13069,7 @@ function ContactForm() {
         margin: "0 auto",
         maxWidth: "40ch"
       }
-    }, "We just opened a pre-filled draft in your email app - hit send there and we'll reply within one business day.")));
+    }, "Thanks for reaching out - we'll get back to you within one business day.")));
   }
   return /*#__PURE__*/React.createElement("form", {
     onSubmit: submit,
@@ -13060,7 +13078,16 @@ function ContactForm() {
       flexDirection: "column",
       gap: 22
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("input", {
+    id: "botcheck",
+    type: "text",
+    tabIndex: -1,
+    autoComplete: "off",
+    "aria-hidden": "true",
+    style: {
+      display: "none"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
     className: "metis-ct-row",
     style: {
       display: "grid",
@@ -13138,8 +13165,16 @@ function ContactForm() {
   }, /*#__PURE__*/React.createElement(CT.Button, {
     variant: "primary",
     size: "lg",
-    type: "submit"
-  }, "Send message"), /*#__PURE__*/React.createElement("span", {
+    type: "submit",
+    disabled: status === "sending"
+  }, status === "sending" ? "Sending..." : "Send message"), status === "error" ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--font-sans)",
+      fontSize: "var(--fs-sm)",
+      fontWeight: 600,
+      color: "#e5484d"
+    }
+  }, "Something went wrong - please email us directly at info@metisai.in.") : /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: "var(--font-sans)",
       fontSize: "var(--fs-sm)",
