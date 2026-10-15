@@ -78,6 +78,8 @@
   .metis-nav-link:hover .metis-nav-f { width:100%; }
   .metis-squig__f { display: block !important; }
   .metis-squig--thin .metis-squig__u { height: 12px !important; bottom: -8px !important; }
+  /* narrow phones: the nowrap "evidence machine" squiggle was wider than the hero card (clipped) and its wave overlapped the next line */
+  @media (max-width: 440px) { h1:has(> .metis-squig) { font-size: min(2.2rem, calc((100vw - 136px) / 7.8)) !important; line-height: 1.2 !important; } h1 > .metis-squig--thin .metis-squig__u { height: 9px !important; bottom: -6px !important; } }
   @media (max-width: 900px) {
     .metis-cs-head { grid-template-columns: 1fr !important; align-items: start !important; }
     .metis-ticker { grid-template-columns: 1fr 1fr !important; }
