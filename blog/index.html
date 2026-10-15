@@ -166,6 +166,9 @@
     border-radius: var(--radius-xl); text-align: left;
   }
   .metis-article-cta .metis-serif { font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.25; color: var(--text-strong); margin: 0 0 18px; }
+  .metis-related { margin: 3em 0 0; padding-top: 1.6em; border-top: 1px solid var(--border-hair); }
+  .metis-related h2 { margin: 0 0 0.7em; font-size: 1.15rem; }
+  .metis-related ul { margin: 0; }
   .metis-article-footer-space { padding-bottom: clamp(48px, 8vh, 96px); }
 
   /* ---- Answer box: the direct answer AI engines lift. Serif marks it as the answer. ---- */
@@ -233,6 +236,12 @@
     font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.55;
     color: var(--text-muted); margin: 0; max-width: 64ch;
   }
+  .metis-notes-more {
+    font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.6;
+    color: var(--text-muted); margin: 30px 0 0;
+  }
+  .metis-notes-more a { color: var(--metis-blue); text-decoration: none; font-weight: 500; }
+  .metis-notes-more a:hover { text-decoration: underline; }
   .metis-card-go {
     display: inline-block; margin-top: 15px; font-family: var(--font-sans);
     font-size: var(--fs-sm); font-weight: 600; color: var(--metis-blue);
@@ -312,6 +321,7 @@
         <span class="metis-card-go">Read the note &rarr;</span>
       </a>
   </div>
+  <p class="metis-notes-more">Want the short version of how we work? See <a href="/services/">what we build</a>, <a href="/services/detailed/">every service in detail</a>, or <a href="/faq/">the FAQ</a>.</p>
   <div class="metis-article-footer-space"></div>
 </main>
 
@@ -321,6 +331,7 @@
       <p class="metis-serif" style="font-size: var(--fs-serif-xl); line-height: 1.16; max-width: 12ch; color: var(--text-strong); margin: 0px;">We build AI that earns its place in your business, and grows with your team.</p>
       <nav aria-label="Footer" style="display: flex; flex-direction: column; gap: 16px; min-width: 160px;">
         <a href="/services/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Services</a>
+        <a href="/services/detailed/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Services in detail</a>
         <a href="/about/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">About us</a>
         <a href="/blog/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Notes</a>
         <a href="/faq/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">FAQ</a>

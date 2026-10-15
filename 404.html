@@ -23,6 +23,9 @@
   h1 { font-weight: 600; font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -0.025em; color: var(--text-strong, #14130f); margin: 28px 0 12px; }
   p { color: var(--text-muted, #6b665e); font-size: 1.05rem; margin: 0 0 32px; }
   a.btn { display: inline-block; background: var(--metis-ink, #14130f); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 999px; font-weight: 500; }
+  .more { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin-top: 28px; }
+  .more a { color: var(--text-muted, #6b665e); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 4px 0; }
+  .more a:hover { color: var(--metis-blue, #1c46ff); }
 </style>
 </head>
 <body>
@@ -32,6 +35,9 @@
       <h1>This page doesn&rsquo;t exist.</h1>
       <p>The link may be old, or the page has moved.</p>
       <a class="btn" href="/">Back to home</a>
+      <nav class="more" aria-label="Site">
+        <a href="/services/">Services</a><a href="/services/detailed/">Services in detail</a><a href="/blog/">Notes</a><a href="/faq/">FAQ</a><a href="/contact/">Contact us</a>
+      </nav>
     </div>
   </div>
 </body>

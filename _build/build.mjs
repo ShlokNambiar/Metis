@@ -35,6 +35,10 @@ const NOTES = [
     dateHuman: "16 August 2026",
     status: { label: "Full compliance 13 May 2027", kind: "due" },
     kicker: "DPDP",
+    related: [
+      { href: "/services/detailed/#enterprise-ai", label: "Enterprise AI: governance, compliance and data systems we build" },
+      { href: "/faq/#data", label: "FAQ: data and compliance" },
+    ],
   },
   {
     slug: "trai-140-1600-series-insurance-calls",
@@ -46,6 +50,10 @@ const NOTES = [
     dateHuman: "16 August 2026",
     status: { label: "In force since 1 Jan 2026", kind: "live" },
     kicker: "TCCCPR",
+    related: [
+      { href: "/services/detailed/#agentic-systems", label: "Agentic Systems: the voice and conversational agents we build" },
+      { href: "/faq/#voice", label: "FAQ: AI voice and calling" },
+    ],
   },
   {
     slug: "questions-before-buying-ai-calling-india",
@@ -57,6 +65,10 @@ const NOTES = [
     dateHuman: "16 August 2026",
     status: { label: "Buyer's guide", kind: "" },
     kicker: "Buying",
+    related: [
+      { href: "/services/detailed/#agentic-systems", label: "Agentic Systems: the voice and conversational agents we build" },
+      { href: "/faq/#voice", label: "FAQ: AI voice and calling" },
+    ],
   },
 ];
 
@@ -68,6 +80,7 @@ const esc = (s) =>
 // Plain text for JSON-LD: strip tags, decode the few entities we use, collapse space.
 const plain = (html) =>
   html
+    .replace(/<\/?(?:a|strong|em|b|i|code|span|time)(?=[\s>])[^>]*>/g, "")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&mdash;/g, "\u2014")
@@ -214,6 +227,15 @@ for (const n of NOTES) {
   </div>
   <div class="metis-article-body">
 ${body}
+    <aside class="metis-related" aria-labelledby="metis-related-h">
+      <h2 id="metis-related-h">Keep reading</h2>
+      <ul>
+${NOTES.filter((o) => o.slug !== n.slug)
+  .map((o) => `        <li><a href="/blog/${o.slug}/">${esc(o.h1)}</a></li>`)
+  .concat(n.related.map((r) => `        <li><a href="${r.href}">${esc(r.label)}</a></li>`))
+  .join("\n")}
+      </ul>
+    </aside>
     <div class="metis-article-cta">
       <p class="metis-serif">Building this yourself? We already run it in production.</p>
       <a class="metis-btn metis-btn--primary metis-btn--md" href="/contact/">Talk to us</a>
@@ -264,6 +286,7 @@ const indexMain = `<main id="metis-main" class="metis-article" style="max-width:
   <div class="metis-cards">
 ${cards}
   </div>
+  <p class="metis-notes-more">Want the short version of how we work? See <a href="/services/">what we build</a>, <a href="/services/detailed/">every service in detail</a>, or <a href="/faq/">the FAQ</a>.</p>
   <div class="metis-article-footer-space"></div>
 </main>`;
 
@@ -290,6 +313,12 @@ const indexStyles = `<style data-metis="cards">
     font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.55;
     color: var(--text-muted); margin: 0; max-width: 64ch;
   }
+  .metis-notes-more {
+    font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.6;
+    color: var(--text-muted); margin: 30px 0 0;
+  }
+  .metis-notes-more a { color: var(--metis-blue); text-decoration: none; font-weight: 500; }
+  .metis-notes-more a:hover { text-decoration: underline; }
   .metis-card-go {
     display: inline-block; margin-top: 15px; font-family: var(--font-sans);
     font-size: var(--fs-sm); font-weight: 600; color: var(--metis-blue);
