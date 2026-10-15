@@ -38,6 +38,8 @@
   .metis-tlink { color: var(--metis-blue); font-weight: 500; text-decoration: none; }
   .metis-tlink:hover { text-decoration: underline; }
   [data-theme="dark"] .metis-tlink { color: #8da5ff; }
+  /* the mailto link carries an inline brand-blue colour; lift it in dark mode like the other text links */
+  [data-theme="dark"] a[href^="mailto:"] { color: #8da5ff !important; }
 
   /* ---------- Dark mode (shared) ---------- */
   [data-theme="dark"] {
