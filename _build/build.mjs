@@ -511,17 +511,20 @@ emit(
 
 /* ---------------- sitemap ---------------- */
 
-const today = "2026-08-16";
+// lastmod = the date each page's published HTML last changed (git log -1 of the
+// output file). Every indexable page changed on 2026-10-15 (SEO/AEO pass: GA4,
+// footer + internal links, JSON-LD). Bump the matching entry when a page changes.
+const SEO_PASS = "2026-10-15";
 const urls = [
-  { loc: `${SITE}/`, mod: today },
-  { loc: `${SITE}/services/`, mod: "2026-07-06" },
-  { loc: `${SITE}/services/detailed/`, mod: "2026-07-06" },
-  { loc: `${SITE}/about/`, mod: "2026-07-06" },
-  { loc: `${SITE}/contact/`, mod: "2026-08-12" },
-  { loc: `${SITE}/faq/`, mod: today },
-  { loc: `${SITE}/blog/`, mod: today },
-  { loc: `${SITE}/privacy/`, mod: "2026-10-15" },
-  ...built.map((n) => ({ loc: n.url, mod: n.dateISO })),
+  { loc: `${SITE}/`, mod: SEO_PASS },
+  { loc: `${SITE}/services/`, mod: SEO_PASS },
+  { loc: `${SITE}/services/detailed/`, mod: SEO_PASS },
+  { loc: `${SITE}/about/`, mod: SEO_PASS },
+  { loc: `${SITE}/contact/`, mod: SEO_PASS },
+  { loc: `${SITE}/faq/`, mod: SEO_PASS },
+  { loc: `${SITE}/blog/`, mod: SEO_PASS },
+  { loc: `${SITE}/privacy/`, mod: SEO_PASS },
+  ...built.map((n) => ({ loc: n.url, mod: n.lastmod || SEO_PASS })),
 ];
 
 emit(
