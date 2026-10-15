@@ -432,6 +432,54 @@ emit(
   })
 );
 
+/* ---------------- privacy ---------------- */
+
+const privacyBody = frag("privacy");
+const privacyMain = `<main id="metis-main" class="metis-article">
+  <div class="metis-article-head">
+    <p class="metis-eyebrow" style="margin: 0;">Privacy</p>
+    <h1>Privacy policy</h1>
+    <div class="metis-article-byline">
+      <b>METIS</b><span aria-hidden="true">&middot;</span>
+      <span>metisai.in</span><span aria-hidden="true">&middot;</span>
+      <span>Updated <time datetime="2026-10-15">15 October 2026</time></span>
+    </div>
+  </div>
+  <div class="metis-article-body">
+${privacyBody}
+  </div>
+  <div class="metis-article-footer-space"></div>
+</main>`;
+
+console.log("\nPrivacy:");
+emit(
+  "privacy/index.html",
+  render({
+    title: "Privacy policy | METIS",
+    ogTitle: "Privacy policy | METIS",
+    description:
+      "What metisai.in collects (Google Analytics and contact-form details), why, who processes it, how long it is kept, and your rights under India's DPDP Act.",
+    canonical: `${SITE}/privacy/`,
+    ogType: "website",
+    jsonld: [
+      ld({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Privacy policy",
+        url: `${SITE}/privacy/`,
+        inLanguage: "en-IN",
+        dateModified: "2026-10-15",
+        publisher: ORG,
+      }),
+      ld(crumbs([{ name: "Home", url: `${SITE}/` }, { name: "Privacy policy", url: `${SITE}/privacy/` }])),
+    ].join("\n"),
+    main: privacyMain,
+    headExtra: `<style data-metis="privacy">
+  .metis-article-body code { font-family: var(--font-mono); font-size: 0.88em; }
+</style>`,
+  })
+);
+
 /* ---------------- sitemap ---------------- */
 
 const today = "2026-08-16";
@@ -443,6 +491,7 @@ const urls = [
   { loc: `${SITE}/contact/`, mod: "2026-08-12" },
   { loc: `${SITE}/faq/`, mod: today },
   { loc: `${SITE}/blog/`, mod: today },
+  { loc: `${SITE}/privacy/`, mod: "2026-10-15" },
   ...built.map((n) => ({ loc: n.url, mod: n.dateISO })),
 ];
 
