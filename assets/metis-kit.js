@@ -16,7 +16,9 @@ const METIS = {
     apps: "https://aloa.co/_astro/offerings-apps.CY0Ny_ZY.webp",
     hipaa: "https://aloa.co/_astro/offerings-hipaa.fbkoPHw4.webp"
   },
-  clients: ["1.Bhk2G6HT", "2.hBZMo3oj", "3.DFDIdSjo", "4.BQkgMrKo", "5.DXdwrVf5", "6.mwE4G8ES", "7.v3tsrUMS", "8.BXU0CYNN", "9.Cb2Sv5m1", "10.Rl-6MpE4", "11.CqHSmMG9", "12.BzzgRAwT", "13.Cxylptnn", "14.CY9-Bg_I"].map(h => `https://aloa.co/_astro/${h}.webp`)
+  clients: ["1.Bhk2G6HT", "2.hBZMo3oj", "3.DFDIdSjo", "4.BQkgMrKo", "5.DXdwrVf5", "6.mwE4G8ES", "7.v3tsrUMS", "8.BXU0CYNN", "9.Cb2Sv5m1", "10.Rl-6MpE4", "11.CqHSmMG9", "12.BzzgRAwT", "13.Cxylptnn", "14.CY9-Bg_I"].map(h => `https://aloa.co/_astro/${h}.webp`),
+  /* intrinsic px size of each client logo (same order); used for width/height attrs */
+  clientDims: [[354,60],[255,54],[176,81],[139,68],[277,69],[120,73],[139,49],[272,72],[415,74],[193,76],[230,87],[181,70],[208,63],[260,70]]
 };
 window.METIS = METIS;
 
@@ -364,6 +366,8 @@ function LogoCloud() {
     className: "metis-client-logo",
     src: src,
     alt: "",
+    width: METIS.clientDims[i][0],
+    height: METIS.clientDims[i][1],
     style: {
       height: 26,
       width: "auto",
