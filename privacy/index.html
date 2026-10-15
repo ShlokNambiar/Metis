@@ -12,18 +12,18 @@
 </script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Privacy policy | METIS</title>
+<title>METIS | Privacy policy</title>
 <meta name="description" content="What metisai.in collects (Google Analytics and contact-form details), why, who processes it, how long it is kept, and your rights under India's DPDP Act." />
 <link rel="canonical" href="https://metisai.in/privacy/" />
 <meta property="og:site_name" content="METIS" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Privacy policy | METIS" />
+<meta property="og:title" content="METIS | Privacy policy" />
 <meta property="og:description" content="What metisai.in collects (Google Analytics and contact-form details), why, who processes it, how long it is kept, and your rights under India's DPDP Act." />
 <meta property="og:url" content="https://metisai.in/privacy/" />
 <meta property="og:image" content="https://metisai.in/icons/og-card.png" />
 <meta property="og:locale" content="en_IN" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Privacy policy | METIS" />
+<meta name="twitter:title" content="METIS | Privacy policy" />
 <meta name="twitter:description" content="What metisai.in collects (Google Analytics and contact-form details), why, who processes it, how long it is kept, and your rights under India's DPDP Act." />
 <meta name="twitter:image" content="https://metisai.in/icons/og-card.png" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -109,10 +109,17 @@
     letter-spacing: -0.025em; color: var(--text-strong); margin: 18px 0 18px;
   }
   .metis-article-byline {
-    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
     font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-faint);
     padding-bottom: 28px; border-bottom: 1px solid var(--border-hair); margin-bottom: 36px;
+    overflow: hidden;
   }
+  /* Separator dots sit in each item's left padding; the one that lands at the
+     start of a wrapped line falls outside the byline box and is clipped, so a
+     line never starts or ends on a stray dot. */
+  .metis-byline-items { display: flex; flex-wrap: wrap; row-gap: 8px; align-items: center; margin-left: -28px; }
+  .metis-bi { position: relative; padding-left: 28px; }
+  .metis-bi::before { content: "\00b7"; position: absolute; left: 0; width: 28px; text-align: center; }
+  .metis-bi--nodot::before { content: none; }
   .metis-article-byline b { color: var(--text-muted); font-weight: 600; }
   .metis-article-body { font-family: var(--font-sans); color: var(--text-body); font-size: 1.0625rem; line-height: 1.65; }
   .metis-article-body p { margin: 0 0 1.25em; }
@@ -256,16 +263,16 @@
   <div class="metis-article-head">
     <p class="metis-eyebrow" style="margin: 0;">Privacy</p>
     <h1>Privacy policy</h1>
-    <div class="metis-article-byline">
-      <b>METIS</b><span aria-hidden="true">&middot;</span>
-      <span>metisai.in</span><span aria-hidden="true">&middot;</span>
-      <span>Updated <time datetime="2026-10-15">15 October 2026</time></span>
-    </div>
+    <div class="metis-article-byline"><span class="metis-byline-items">
+      <b class="metis-bi">METIS</b>
+      <span class="metis-bi">metisai.in</span>
+      <span class="metis-bi">Updated <time datetime="2026-10-15">15 October 2026</time></span>
+    </span></div>
   </div>
   <div class="metis-article-body">
 <div class="metis-answer">
   <span class="metis-answer-k">In short</span>
-  <p>This site measures visits with Google Analytics, and the contact form sends what you type to us by email through Web3Forms. That is all the personal data it handles. We use it to understand how the site is used and to reply to you.</p>
+  <p>This site measures visits with Google Analytics, and the contact form sends what you type to us by email through Web3Forms. We use it to understand how the site is used and to reply to you. The optional demo console keeps anything you enter in your own browser.</p>
 </div>
 
 <p class="metis-lede">This page describes what metisai.in collects, why, who processes it on our behalf, and the rights you have over it under India's Digital Personal Data Protection Act, 2023.</p>
@@ -278,7 +285,7 @@
 
 <h3>When you browse the site</h3>
 
-<p>Every page loads Google Analytics 4, a service provided by Google. It sets first-party cookies (named <code>_ga</code> and <code>_ga_</code> followed by an ID) and records which pages you view, how you arrived, your device and browser type, and an approximate location derived from your IP address. We see this as aggregated reports on how the site is used. It does not tell us who you are.</p>
+<p>The pages of this site load Google Analytics 4, a service provided by Google, as soon as they open. It sets first-party cookies (named <code>_ga</code> and <code>_ga_</code> followed by an ID) and records which pages you view, how you arrived, your device and browser type, and an approximate location derived from your IP address. We see this as aggregated reports on how the site is used. It does not tell us who you are. If you do not want your visits measured, see <a href="#opt-out">how to opt out</a> below.</p>
 
 <h3>When you use the contact form</h3>
 
@@ -292,11 +299,15 @@
 
 <p>If you switch between light and dark mode, the site remembers your choice in your browser's local storage under the key <code>metis-theme</code>. It is never sent to us.</p>
 
+<h3>If you try the demo console</h3>
+
+<p>The site also hosts an interactive demo console. It does not load Google Analytics. If you enter an API key for an AI provider (Groq or Google Gemini), the key and your settings are saved in your browser's local storage, and the key and the prompts you run are sent directly from your browser to the provider you pick, under that provider's own terms. None of it is sent to us.</p>
+
 <h2>Why we use it</h2>
 
 <ul>
   <li><strong>Analytics:</strong> to understand which pages are useful, how people find the site, and what to improve.</li>
-  <li><strong>Contact form and email:</strong> to read your enquiry, reply to it, and continue the conversation if you want to work with us.</li>
+  <li><strong>Contact form and email:</strong> only to read your enquiry and reply to you, including any follow-up about that enquiry.</li>
 </ul>
 
 <p>We do not use what you send through the form for any other purpose.</p>
@@ -315,7 +326,7 @@
 
 <h2>How long we keep it</h2>
 
-<p>Analytics data is kept for the retention period set in our Google Analytics account and then deleted by Google. Enquiries are kept for as long as we need them to respond to you and, if we go on to work together, for the course of that relationship. We delete them when they are no longer needed for that purpose.</p>
+<p>Analytics data is kept for the retention period set in our Google Analytics account and then deleted by Google. Enquiries are kept for as long as we need them to reply to you and handle any follow-up about that enquiry. We delete them when they are no longer needed for that purpose.</p>
 
 <h2>Your rights</h2>
 
@@ -325,14 +336,14 @@
   <li>for a summary of the personal data we hold about you and how we have processed it;</li>
   <li>to correct, complete or update it;</li>
   <li>to erase it, where we no longer need it for the purpose it was given;</li>
-  <li>to stop processing it, by withdrawing your consent;</li>
+  <li>to withdraw consent you have given, for example to our keeping an enquiry you sent, after which we stop processing that data;</li>
   <li>to act on a grievance about how we have handled it;</li>
   <li>to record someone you nominate to exercise these rights for you in the event of your death or incapacity.</li>
 </ul>
 
 <p>Email <a href="mailto:info@metisai.in">info@metisai.in</a> with your request. If you are not satisfied with our response, you can complain to the Data Protection Board of India.</p>
 
-<p>To stop Google Analytics measuring your visits, you can block or clear cookies in your browser settings, or install Google's <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Google Analytics opt-out browser add-on</a>.</p>
+<p id="opt-out">To stop Google Analytics measuring your visits, you can block or clear cookies in your browser settings, or install Google's <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Google Analytics opt-out browser add-on</a>.</p>
 
 <h2>Changes to this page</h2>
 

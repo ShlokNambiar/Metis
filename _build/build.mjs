@@ -28,11 +28,12 @@ const NOTES = [
   {
     slug: "dpdp-sending-customer-data-to-ai-models",
     h1: "Can you send Indian customer data to OpenAI or Claude?",
-    title: "Send Indian customer data to OpenAI or Claude? | METIS",
+    title: "METIS | Send Indian customer data to OpenAI or Claude?",
     description:
       "India's DPDP framework permits cross-border transfer unless a country is restricted — and none is. What that means for teams building AI products.",
     dateISO: "2026-08-16",
     dateHuman: "16 August 2026",
+    modifiedISO: "2026-10-15",
     status: { label: "Full compliance 13 May 2027", kind: "due" },
     kicker: "DPDP",
     related: [
@@ -43,11 +44,12 @@ const NOTES = [
   {
     slug: "trai-140-1600-series-insurance-calls",
     h1: "140 or 1600: which number series must insurance calls use?",
-    title: "140 or 1600: which series must insurance calls use? | METIS",
+    title: "METIS | 140 or 1600: which series must insurance calls use?",
     description:
       "TRAI restricted ordinary 10-digit numbers for commercial calling from 1 January 2026. Which series applies to renewals, and why 1600 lifts connect rates.",
     dateISO: "2026-08-16",
     dateHuman: "16 August 2026",
+    modifiedISO: "2026-10-15",
     status: { label: "In force since 1 Jan 2026", kind: "live" },
     kicker: "TCCCPR",
     related: [
@@ -58,11 +60,12 @@ const NOTES = [
   {
     slug: "questions-before-buying-ai-calling-india",
     h1: "Ten questions to ask before buying an AI calling agent in India",
-    title: "10 questions before buying an AI calling agent | METIS",
+    title: "METIS | 10 questions before buying an AI calling agent",
     description:
       "The questions that separate an AI voice system which survives real customers from one that does not — number series, interruptions, fallbacks and handoff.",
     dateISO: "2026-08-16",
     dateHuman: "16 August 2026",
+    modifiedISO: "2026-10-15",
     status: { label: "Buyer's guide", kind: "" },
     kicker: "Buying",
     related: [
@@ -178,7 +181,7 @@ for (const n of NOTES) {
     headline: n.h1,
     description: n.description,
     datePublished: n.dateISO,
-    dateModified: n.dateISO,
+    dateModified: n.modifiedISO || n.dateISO,
     inLanguage: "en-IN",
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     image: `${SITE}/icons/og-card.png`,
@@ -218,12 +221,12 @@ for (const n of NOTES) {
       <span aria-hidden="true"> / </span><span>${esc(n.kicker)}</span>
     </nav>
     <h1>${esc(n.h1)}</h1>
-    <div class="metis-article-byline">
-      <b>METIS</b><span aria-hidden="true">&middot;</span>
-      <time datetime="${n.dateISO}">${n.dateHuman}</time><span aria-hidden="true">&middot;</span>
-      <span>${readMin} min read</span>
-      ${statusTag(n.status)}
-    </div>
+    <div class="metis-article-byline"><span class="metis-byline-items">
+      <b class="metis-bi">METIS</b>
+      <time class="metis-bi" datetime="${n.dateISO}">${n.dateHuman}</time>
+      <span class="metis-bi">${readMin} min read</span>
+      ${n.status.label ? `<span class="metis-bi metis-bi--nodot">${statusTag(n.status)}</span>` : ""}
+    </span></div>
   </div>
   <div class="metis-article-body">
 ${body}
@@ -248,7 +251,7 @@ ${NOTES.filter((o) => o.slug !== n.slug)
     `blog/${n.slug}/index.html`,
     render({
       title: n.title,
-      ogTitle: n.h1,
+      ogTitle: n.title,
       description: n.description,
       canonical: url,
       ogType: "article",
@@ -329,8 +332,8 @@ console.log("\nIndex:");
 emit(
   "blog/index.html",
   render({
-    title: "Notes on AI, compliance and voice agents in India | METIS",
-    ogTitle: "Notes | METIS",
+    title: "METIS | Notes on AI, compliance and voice agents in India",
+    ogTitle: "METIS | Notes on AI, compliance and voice agents in India",
     description:
       "Practical writing on AI voice agents, India's DPDP and TCCCPR rules, and what building this actually involves — from a team running it in production.",
     canonical: `${SITE}/blog/`,
@@ -437,8 +440,8 @@ console.log("\nFAQ:");
 emit(
   "faq/index.html",
   render({
-    title: "FAQ | METIS — AI voice agents and India's rules",
-    ogTitle: "Questions we get asked | METIS",
+    title: "METIS | FAQ on AI voice agents and India's rules",
+    ogTitle: "METIS | FAQ on AI voice agents and India's rules",
     description:
       "Straight answers on how METIS works, what AI voice agents can realistically do, where your customer data goes, and what India's rules require.",
     canonical: `${SITE}/faq/`,
@@ -468,11 +471,11 @@ const privacyMain = `<main id="metis-main" class="metis-article">
   <div class="metis-article-head">
     <p class="metis-eyebrow" style="margin: 0;">Privacy</p>
     <h1>Privacy policy</h1>
-    <div class="metis-article-byline">
-      <b>METIS</b><span aria-hidden="true">&middot;</span>
-      <span>metisai.in</span><span aria-hidden="true">&middot;</span>
-      <span>Updated <time datetime="2026-10-15">15 October 2026</time></span>
-    </div>
+    <div class="metis-article-byline"><span class="metis-byline-items">
+      <b class="metis-bi">METIS</b>
+      <span class="metis-bi">metisai.in</span>
+      <span class="metis-bi">Updated <time datetime="2026-10-15">15 October 2026</time></span>
+    </span></div>
   </div>
   <div class="metis-article-body">
 ${privacyBody}
@@ -484,8 +487,8 @@ console.log("\nPrivacy:");
 emit(
   "privacy/index.html",
   render({
-    title: "Privacy policy | METIS",
-    ogTitle: "Privacy policy | METIS",
+    title: "METIS | Privacy policy",
+    ogTitle: "METIS | Privacy policy",
     description:
       "What metisai.in collects (Google Analytics and contact-form details), why, who processes it, how long it is kept, and your rights under India's DPDP Act.",
     canonical: `${SITE}/privacy/`,

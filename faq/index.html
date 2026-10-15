@@ -12,18 +12,18 @@
 </script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FAQ | METIS — AI voice agents and India's rules</title>
+<title>METIS | FAQ on AI voice agents and India's rules</title>
 <meta name="description" content="Straight answers on how METIS works, what AI voice agents can realistically do, where your customer data goes, and what India's rules require." />
 <link rel="canonical" href="https://metisai.in/faq/" />
 <meta property="og:site_name" content="METIS" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Questions we get asked | METIS" />
+<meta property="og:title" content="METIS | FAQ on AI voice agents and India's rules" />
 <meta property="og:description" content="Straight answers on how METIS works, what AI voice agents can realistically do, where your customer data goes, and what India's rules require." />
 <meta property="og:url" content="https://metisai.in/faq/" />
 <meta property="og:image" content="https://metisai.in/icons/og-card.png" />
 <meta property="og:locale" content="en_IN" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Questions we get asked | METIS" />
+<meta name="twitter:title" content="METIS | FAQ on AI voice agents and India's rules" />
 <meta name="twitter:description" content="Straight answers on how METIS works, what AI voice agents can realistically do, where your customer data goes, and what India's rules require." />
 <meta name="twitter:image" content="https://metisai.in/icons/og-card.png" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -109,10 +109,17 @@
     letter-spacing: -0.025em; color: var(--text-strong); margin: 18px 0 18px;
   }
   .metis-article-byline {
-    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
     font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-faint);
     padding-bottom: 28px; border-bottom: 1px solid var(--border-hair); margin-bottom: 36px;
+    overflow: hidden;
   }
+  /* Separator dots sit in each item's left padding; the one that lands at the
+     start of a wrapped line falls outside the byline box and is clipped, so a
+     line never starts or ends on a stray dot. */
+  .metis-byline-items { display: flex; flex-wrap: wrap; row-gap: 8px; align-items: center; margin-left: -28px; }
+  .metis-bi { position: relative; padding-left: 28px; }
+  .metis-bi::before { content: "\00b7"; position: absolute; left: 0; width: 28px; text-align: center; }
+  .metis-bi--nodot::before { content: none; }
   .metis-article-byline b { color: var(--text-muted); font-weight: 600; }
   .metis-article-body { font-family: var(--font-sans); color: var(--text-body); font-size: 1.0625rem; line-height: 1.65; }
   .metis-article-body p { margin: 0 0 1.25em; }

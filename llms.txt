@@ -30,11 +30,11 @@ METIS works across five capabilities: Enterprise AI, Agentic Systems (including 
 ## FAQ
 
 - [FAQ](https://metisai.in/faq/): Answers on how METIS works, what AI voice agents can realistically do, where customer data goes, and what India's rules require.
-- [What Metis does](https://metisai.in/faq/#about): What METIS builds, the industries it works with, team size and location.
+- [What Metis does](https://metisai.in/faq/#about): What METIS builds, the industries it works with, and team size.
 - [Working together](https://metisai.in/faq/#working): How engagements start and run.
 - [AI voice and calling](https://metisai.in/faq/#voice): What AI voice agents can realistically do, and India's calling rules.
 - [Data and compliance](https://metisai.in/faq/#data): Where customer data goes and what India's DPDP rules require.
-- [Practical](https://metisai.in/faq/#practical): Smallest project, working outside India, and how to get in touch.
+- [Practical](https://metisai.in/faq/#practical): Where METIS is based, smallest project, working outside India, and how to get in touch.
 
 ## Optional
 

@@ -108,10 +108,17 @@
     letter-spacing: -0.025em; color: var(--text-strong); margin: 18px 0 18px;
   }
   .metis-article-byline {
-    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
     font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-faint);
     padding-bottom: 28px; border-bottom: 1px solid var(--border-hair); margin-bottom: 36px;
+    overflow: hidden;
   }
+  /* Separator dots sit in each item's left padding; the one that lands at the
+     start of a wrapped line falls outside the byline box and is clipped, so a
+     line never starts or ends on a stray dot. */
+  .metis-byline-items { display: flex; flex-wrap: wrap; row-gap: 8px; align-items: center; margin-left: -28px; }
+  .metis-bi { position: relative; padding-left: 28px; }
+  .metis-bi::before { content: "\00b7"; position: absolute; left: 0; width: 28px; text-align: center; }
+  .metis-bi--nodot::before { content: none; }
   .metis-article-byline b { color: var(--text-muted); font-weight: 600; }
   .metis-article-body { font-family: var(--font-sans); color: var(--text-body); font-size: 1.0625rem; line-height: 1.65; }
   .metis-article-body p { margin: 0 0 1.25em; }
