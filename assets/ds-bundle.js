@@ -36,7 +36,7 @@ const CSS = `
 .metis-btn:hover{ text-decoration:none; }
 .metis-btn:active{ transform:scale(var(--press-scale)); }
 .metis-btn[disabled]{ opacity:.45; cursor:not-allowed; }
-.metis-btn__arrow{ transition:transform var(--dur-base) var(--ease-out); }
+.metis-btn__arrow{ flex-shrink:0; transition:transform var(--dur-base) var(--ease-out); }
 .metis-btn:hover .metis-btn__arrow{ transform:translateX(3px); }
 
 /* sizes */
