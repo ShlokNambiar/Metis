@@ -1,0 +1,107 @@
+<div class="metis-answer">
+  <span class="metis-answer-k">Short answer</span>
+  <p>Start with the number series your calls will originate from. It is a factual question with a one-word answer, it is legally load-bearing in India, and a vendor who cannot answer it immediately has not thought about the Indian market.</p>
+</div>
+
+<p class="metis-lede">Most AI calling demos sound excellent. That is what they are built to do. These are the ten questions that separate a system which will survive contact with your customers from one that will not — and none of them are about the voice.</p>
+
+<p>We would be happy to be asked every one of these. That is rather the point of writing them down.</p>
+
+<h2>1. Which number series will my calls originate from?</h2>
+
+<p>In India this is the first question, not the last. Ordinary 10-digit numbers are restricted for commercial calling. Service and transactional calls by regulated BFSI entities belong on the <strong>1600 series</strong>; promotional calls belong on <strong>140</strong>. The deadline to move was 1 January 2026.</p>
+
+<p><strong>A weak answer sounds like:</strong> "We use regular numbers, it works fine." It does work, right up until five complaints arrive within ten days.</p>
+
+<p>Full detail in <a href="/blog/trai-140-1600-series-insurance-calls/">our note on the 140 and 1600 series</a>.</p>
+
+<h2>2. Who registers on DLT — you or me?</h2>
+
+<p>Every commercial caller must be registered on the Distributed Ledger Technology platform, with headers and content templates registered there too. Vendors differ on whether they carry this or expect you to. Neither is wrong. Discovering the answer after signing is.</p>
+
+<h2>3. What happens when the customer interrupts?</h2>
+
+<p>Real people talk over the agent. They say "haan haan" mid-sentence, they answer before the question finishes, they interrupt to ask something else entirely.</p>
+
+<p>An agent that ploughs through its script while the customer is talking is instantly recognisable as a machine, and the call is over. Ask to hear a recording where the customer interrupts twice. Not a scripted demo — a real one.</p>
+
+<h2>4. What is the latency, and measured from where?</h2>
+
+<p>"Under a second" is a claim that hides its own definition. Model inference time is not the number that matters. What matters is the gap between the customer finishing their sentence and hearing the first syllable of the reply, over an actual mobile network, on a real call.</p>
+
+<p><strong>A weak answer sounds like:</strong> a benchmark figure with no measurement point attached.</p>
+
+<h2>5. What does the agent do when it does not know?</h2>
+
+<p>This single behaviour decides whether a pilot survives. The options are roughly: guess, deflect, or hand over. Only one of those is acceptable when the subject is somebody's insurance policy.</p>
+
+<p>Ask specifically: what triggers a handoff, where does the call or context go, and what does the customer hear while it happens.</p>
+
+<h2>6. How does it handle Hindi and English in the same sentence?</h2>
+
+<p>Indian customers code-switch constantly, mid-sentence, without warning. "Policy ka renewal kab hai?" is not Hindi, and it is not English.</p>
+
+<p>Many systems handle each language competently in isolation and fall apart at the switch. This cannot be assessed from a demo in one language. Ask for a call where the customer switches twice.</p>
+
+<h2>7. What happens to my recordings and transcripts?</h2>
+
+<p>Call recordings and transcripts are personal data under India's DPDP framework. They need a lawful basis, notice in plain language, and a retention period tied to the purpose they were collected for.</p>
+
+<p>Ask where they are stored, how long they are kept, who inside the vendor can access them, and whether they are used to train models. Recordings are the artefact teams accumulate silently and never schedule for deletion.</p>
+
+<p>Related: <a href="/blog/dpdp-sending-customer-data-to-ai-models/">what DPDP actually requires when customer data reaches an AI model</a>.</p>
+
+<h2>8. Can I listen to a live call, or only a demo reel?</h2>
+
+<p>A recorded demo proves the system worked once. A production number you can dial yourself, or a live call listened to as it happens, proves it works now.</p>
+
+<p>Any vendor running real volume can arrange one. Reluctance here is the most informative signal on this list.</p>
+
+<h2>9. What does the handoff to my team actually look like?</h2>
+
+<p>The agent is not the product. What your team receives is the product.</p>
+
+<p>When someone says yes, what arrives — a WhatsApp message, a CRM record, a row in a sheet, a call transfer? How much context comes with it? Does your team have to listen to the recording to find out what was agreed?</p>
+
+<p>A qualified lead with no context attached is barely faster than an unqualified one.</p>
+
+<h2>10. What happens to the price when volume drops?</h2>
+
+<p>Outbound volume is not flat. Renewal calling is seasonal, campaigns pause, and months differ.</p>
+
+<p>Ask what the bill looks like in a slow month. Per-minute pricing scales down with you. Per-seat or committed-minimum pricing does not, and the mismatch tends to surface exactly when cash is tight.</p>
+
+<h2>Two questions that reveal less than people think</h2>
+
+<h3>"Which model do you use?"</h3>
+<p>Interesting, rarely decisive. Model choice changes every few months, and the difference between a good deployment and a bad one is almost never the base model — it is interruption handling, latency budget, fallback design, and how the handoff is built.</p>
+<p>A vendor <em>locked</em> to one provider with no ability to swap is worth knowing about, though. Not for quality reasons — for the reason set out in the DPDP note above.</p>
+
+<h3>"How accurate is it?"</h3>
+<p>An unfalsifiable number without a task attached. Accurate at what — transcription, intent detection, answering policy questions? Measured on which accent, over which network quality?</p>
+<p>Replace it with question 3, 5 and 6, which are answerable.</p>
+
+<div class="metis-callout">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--metis-rust)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+  <p>If you ask only one: which number series will my calls originate from? It is factual, it is quick, and in India it is the difference between a campaign and a violation.</p>
+</div>
+
+<h2>Before the pilot starts</h2>
+
+<ul>
+  <li>Agree what success means <em>in advance</em>, as a number — connect rate, qualified conversations, or conversions. Not "it sounded good."</li>
+  <li>Fix the call window and the volume per day, in writing.</li>
+  <li>Decide who reviews the recordings, and when.</li>
+  <li>Confirm what happens to your data and your numbers if you do not continue.</li>
+</ul>
+
+<div class="metis-faq">
+  <h2>Common questions</h2>
+  <details><summary>What should I ask an AI voice agent vendor in India?</summary><p>Start with which number series the calls will originate from — 1600 for service and transactional calls by regulated BFSI entities, 140 for promotional. Then ask who registers on DLT, how the agent handles interruptions, what it does when it does not know an answer, how Hindi–English code-switching is handled, and what happens to recordings and transcripts.</p></details>
+  <details><summary>Is AI cold calling legal in India?</summary><p>Commercial calling is permitted but regulated. It must originate from the designated number series rather than ordinary 10-digit numbers, the caller must be registered on the DLT platform, promotional calls require DND scrubbing before every call and a verifiable consent record, and calling hours are restricted. Using an AI agent does not change any of these obligations.</p></details>
+  <details><summary>How do I evaluate an AI calling demo?</summary><p>Ask for a real call rather than a demo reel — ideally a production number you can dial yourself. In the recording, listen for what happens when the customer interrupts, when they switch between Hindi and English mid-sentence, and when they ask something outside the script.</p></details>
+  <details><summary>What is the most common reason AI calling pilots fail?</summary><p>Unclear handoff. The agent qualifies someone successfully, but the human team receives a lead with no context attached and has to listen to the recording to find out what was agreed. Defining what your team receives, and how much context comes with it, matters more than the quality of the voice.</p></details>
+  <details><summary>Should I choose a vendor based on which AI model they use?</summary><p>Rarely. Model choice changes frequently and is seldom what separates a good deployment from a bad one — interruption handling, latency, fallback behaviour and handoff design matter more. It is worth knowing whether a vendor can switch providers, mainly so that a future cross-border restriction would not require re-architecting.</p></details>
+</div>
+
+<p class="metis-verified">Written 16 August 2026 from production experience running outbound AI voice campaigns in India. Regulatory points verified against TRAI's TCCCPR amendments and the DPDP Rules, 2025. Not legal advice.</p>

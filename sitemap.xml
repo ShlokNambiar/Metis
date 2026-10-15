@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://metisai.in/</loc><lastmod>2026-07-06</lastmod></url>
-  <url><loc>https://metisai.in/services/</loc><lastmod>2026-07-06</lastmod></url>
-  <url><loc>https://metisai.in/services/detailed/</loc><lastmod>2026-07-06</lastmod></url>
-  <url><loc>https://metisai.in/about/</loc><lastmod>2026-07-06</lastmod></url>
-  <url><loc>https://metisai.in/contact/</loc><lastmod>2026-07-06</lastmod></url>
+  <url><loc>https://metisai.in/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/services/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/services/detailed/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/about/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/contact/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/faq/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/blog/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/privacy/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/blog/dpdp-sending-customer-data-to-ai-models/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/blog/trai-140-1600-series-insurance-calls/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://metisai.in/blog/questions-before-buying-ai-calling-india/</loc><lastmod>2026-10-15</lastmod></url>
 </urlset>
