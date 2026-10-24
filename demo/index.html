@@ -2435,7 +2435,21 @@ body[data-not-sent] > #vis-container ~ #not-sent {
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-}</style><style>body { padding: 16px; background: var(--surface-1); }
+}
+@keyframes mxIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes mxBeat{0%,100%{opacity:.3;transform:scale(.82)}50%{opacity:1;transform:scale(1)}}
+@keyframes mxSweep{from{background-position:-180px 0}to{background-position:180px 0}}
+.mx-in{animation:mxIn .34s cubic-bezier(.16,1,.3,1) both}
+.mx-run{animation:mxBeat 1.05s ease-in-out infinite}
+.mx-wait{height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--text-accent),transparent);background-size:180px 100%;animation:mxSweep 1.1s linear infinite;opacity:.5}
+.mx-step{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:start;padding:7px 0}
+.mx-step .lb{font-size:13.5px;color:var(--text-primary);line-height:1.45}
+.mx-step .ms{font-family:var(--font-mono);font-size:10.5px;color:var(--text-muted);padding-top:2px}
+.mx-step .rs{grid-column:2/4;font-family:var(--font-mono);font-size:11px;line-height:1.75;color:var(--text-secondary);margin-top:4px;white-space:pre-wrap}
+.mx-step .pip{width:7px;height:7px;border-radius:50%;margin-top:6px}
+.mx-said{font-size:14.5px;line-height:1.62;color:var(--text-primary)}
+@media (prefers-reduced-motion: reduce){.mx-in,.mx-run,.mx-wait{animation:none}}
+</style><style>body { padding: 16px; background: var(--surface-1); }
 #vis-container { overflow: visible; }</style></head><body><svg style="position:absolute;width:0;height:0" aria-hidden="true">
     <defs>
       <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -2732,7 +2746,7 @@ saveCfg();
 
 function hash(s){var h=5381;for(var i=0;i<s.length;i++){h=((h<<5)+h+s.charCodeAt(i))>>>0;}return('000000'+h.toString(16)).slice(-6);}
 function nowT(){try{return new Date().toLocaleTimeString('en-IN',{hour12:false,timeZone:'Asia/Kolkata'}).slice(0,5);}catch(e){return'09:31';}}
-function feed(who,txt){var d=document.createElement('div');d.className='mx-feed';d.innerHTML='<span style="font-family:var(--font-mono);color:var(--text-muted)">'+nowT()+'</span><span><b style="font-weight:500;color:var(--text-primary)">'+who+'</b> '+txt+'</span>';$('feed').insertBefore(d,$('feed').firstChild);}
+function feed(who,txt){var d=document.createElement('div');d.className='mx-feed mx-in';d.innerHTML='<span style="font-family:var(--font-mono);color:var(--text-muted)">'+nowT()+'</span><span><b style="font-weight:500;color:var(--text-primary)">'+who+'</b> '+txt+'</span>';$('feed').insertBefore(d,$('feed').firstChild);}
 function workText(cred,model,check,rec){return 'credential   '+cred+'\nmodel        '+model+'\ncheck        '+check+'\nrecord       #'+rec+' · prev '+S.prevHash;}
 function tlEntry(time,who,color,role,html,work){var d=document.createElement('div');d.style.cssText='display:flex;gap:12px;padding:12px 0;border-bottom:0.5px solid var(--border)';
 var w=work?'<details style="margin-top:6px"><summary style="font-size:12.5px;color:var(--text-accent);cursor:pointer">Show the work</summary><div class="mx-work" style="margin-top:6px">'+work+'</div></details>':'';
@@ -2908,7 +2922,7 @@ kabir:{n:'Kabir',c:'#b4603f',role:'Claims intake',card:'btnK',
 var DK=null,DBUSY=false,DFILE=null,CHATS={};
 
 function dLine(key,who,text,mine,colour){
-var d=document.createElement('div');
+var d=document.createElement('div');d.className='mx-in';
 d.style.cssText='display:flex;gap:9px;align-items:flex-start'+(mine?';justify-content:flex-end':'');
 if(mine){d.innerHTML='<div style="background:var(--bg-accent);border:0.5px solid var(--border);color:var(--text-primary);padding:9px 14px;border-radius:14px;font-size:13.5px;line-height:1.5;max-width:86%">'+text+'</div>';}
 else{d.innerHTML='<span style="width:20px;height:20px;border-radius:50%;flex:none;margin-top:3px;background:'+(colour||'#6c63d2')+'"></span>'
@@ -2956,141 +2970,173 @@ var FILES='files/';
 function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
 async function getText(n){var r=await fetch(FILES+n,{cache:'no-store'});if(!r.ok)throw new Error(n+' \u2014 HTTP '+r.status);return await r.text();}
 async function getJson(n){return JSON.parse(await getText(n));}
-function pad(k){return (k+'                    ').slice(0,20);}
-function money(n){return n.toLocaleString('en-IN');}
+function nf(n){return n.toLocaleString('en-IN');}
 
-function mkSteps(colour){
-var w=document.createElement('div');
-w.style.cssText='display:flex;gap:9px;align-items:flex-start';
-w.innerHTML='<span style="width:20px;height:20px;border-radius:50%;flex:none;margin-top:3px;background:'+colour+'"></span><div style="flex:1;min-width:0"></div>';
+/* a run: steps can be in flight at the same time and settle when they settle */
+function run(colour){
+var w=document.createElement('div');w.className='mx-in';
+w.style.cssText='display:flex;gap:10px;align-items:flex-start';
+w.innerHTML='<span style="width:20px;height:20px;border-radius:50%;flex:none;margin-top:2px;background:'+colour+'"></span><div style="flex:1;min-width:0"></div>';
 var body=w.lastChild;$('dLog').appendChild(w);$('dLog').scrollTop=1e6;
-return{add:function(label){var el=document.createElement('div');
- el.style.cssText='font-size:13.5px;color:var(--text-primary);margin-top:10px';
- el.innerHTML='<span style="color:var(--text-muted)">\u203a</span> '+label+'<span class="sp" style="color:var(--text-muted)"> \u2026</span>';
- body.appendChild(el);$('dLog').scrollTop=1e6;return el;},
- done:function(el,lines,warn){var sp=el.querySelector('.sp');if(sp)sp.remove();
- if(lines){var p=document.createElement('pre');
-  p.style.cssText='margin:6px 0 0 13px;font-family:var(--font-mono);font-size:11.5px;line-height:1.7;white-space:pre-wrap;color:'+(warn?'var(--text-warning)':'var(--text-secondary)');
-  p.textContent=lines;el.appendChild(p);}$('dLog').scrollTop=1e6;}};}
+function scroll(){$('dLog').scrollTop=1e6;}
+return{
+ step:function(label){
+  var t0=performance.now();
+  var el=document.createElement('div');el.className='mx-step mx-in';
+  el.innerHTML='<span class="pip mx-run" style="background:var(--text-accent)"></span>'
+   +'<span class="lb">'+label+'</span><span class="ms"></span>';
+  body.appendChild(el);scroll();
+  return{el:el,
+   end:function(lines,warn){
+    var ms=Math.round(performance.now()-t0);
+    var pip=el.querySelector('.pip');pip.className='pip';
+    pip.style.background=warn?'var(--text-warning)':'var(--text-success)';
+    el.querySelector('.ms').textContent=ms+'ms';
+    if(lines){var r=document.createElement('div');r.className='rs mx-in';r.textContent=lines;el.appendChild(r);}
+    scroll();}};},
+ bar:function(){var b=document.createElement('div');b.className='mx-wait';b.style.margin='6px 0 2px';body.appendChild(b);scroll();return b;},
+ note:function(txt){var n=document.createElement('div');n.className='mx-in';
+  n.style.cssText='font-size:12px;color:var(--text-muted);font-family:var(--font-mono);margin-top:9px';
+  n.textContent=txt;body.appendChild(n);scroll();}};}
+
+/* the agent speaks, revealed rather than dumped */
+function said(key,text,colour){
+var a=AGENTS[key];
+var d=document.createElement('div');d.className='mx-in';
+d.style.cssText='display:flex;gap:10px;align-items:flex-start';
+d.innerHTML='<span style="width:20px;height:20px;border-radius:50%;flex:none;margin-top:3px;background:'+colour+'"></span>'
+ +'<div style="flex:1;min-width:0"><b style="display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);font-weight:500;margin-bottom:4px;font-family:var(--font-mono)">'+a.n+'</b><span class="mx-said"></span></div>';
+$('dLog').appendChild(d);
+var tgt=d.querySelector('.mx-said'),i=0;
+return new Promise(function(res){
+ var iv=setInterval(function(){i+=3;tgt.textContent=text.slice(0,i);$('dLog').scrollTop=1e6;
+  if(i>=text.length){clearInterval(iv);(CHATS[key]=CHATS[key]||[]).push(d.outerHTML);res();}},12);});}
 
 function logStop(key,title,detail){var a=AGENTS[key];
 var h=hash(key+title+S.prevHash);
 tlEntry(nowT(),a.n,a.c,a.role,title,workText('svc-'+key+' \u00b7 read-only',(cfg.live?cfg.model:'deterministic checks'),detail,h));S.prevHash=h;
 feed(a.n,title.replace(/<[^>]+>/g,''));}
 
-async function jobAsha(){var a=AGENTS.asha,T=mkSteps(a.c),st;
-st=T.add('Reading the renewal schedule');
-var txt=await getText('kolhapur-schedule.txt');var L=txt.split('\n');await wait(420);
-T.done(st,'kolhapur-schedule.txt\n'+txt.length+' characters \u00b7 '+L.length+' lines');
-st=T.add('Pulling the fields the renewal needs');await wait(620);
-var want=[['policy_no',/Policy No\s+(\S+)/],['insured',/Insured\s+(.+)/],['period',/Period of Insurance\s+(.+)/],['sum_insured',/Sum Insured\s+(.+)/],['premium',/Premium\s+(.+)/],['wording',/Wording\s+(.+)/]];
-var out='',got=0;
-want.forEach(function(w){var m=txt.match(w[1]);
- if(m){got++;var ln=0;L.forEach(function(l,i){if(!ln&&l.indexOf(m[0].trim())>-1)ln=i+1;});
-  out+=pad(w[0])+m[1].trim()+'   line '+ln+'\n';}
- else out+=pad(w[0])+'not found\n';});
-T.done(st,out.trim()+'\n\n'+got+' of '+want.length+' found, each carrying its line');
-st=T.add('Looking for last year\u2019s claim record');await wait(560);
+function field(txt,lines,re){var m=txt.match(re);if(!m)return null;
+var ln=0;lines.forEach(function(l,i){if(!ln&&l.indexOf(m[0].trim())>-1)ln=i+1;});
+return{v:m[1].trim(),ln:ln};}
+
+async function jobAsha(){var a=AGENTS.asha,R=run(a.c);
+var s1=R.step('Opening the schedule'),s2=R.step('Opening the BrokerSoft record');
+var pA=getText('kolhapur-schedule.txt'),pB=getJson('brokersoft-REN-2026-04417.json');
+var txt=await pA;await wait(300);var L=txt.split('\n');
+s1.end('kolhapur-schedule.txt \u00b7 '+nf(txt.length)+' chars \u00b7 '+L.length+' lines');
+var bs=await pB;await wait(420);
+s2.end('REN-2026-04417 \u00b7 last exported 08:40 today');
+
+var s3=R.step('Reading the fields');await wait(760);
+var want=[['policy no',/Policy No\s+(\S+)/],['insured',/Insured\s+(.+)/],['expires',/Period of Insurance\s+.+to (.+)/],
+ ['sum insured',/Sum Insured\s+(.+)/],['premium',/Premium\s+(.+)/],['wording',/Wording\s+(.+)/]];
+var o='',n=0;want.forEach(function(w){var f=field(txt,L,w[1]);
+ if(f){n++;o+=(w[0]+'            ').slice(0,13)+f.v+'  \u00b7 line '+f.ln+'\n';}});
+s3.end(o.trim()+'\n\n'+n+' of 6 \u00b7 each carries its line');
+
+var s4=R.step('Last year\u2019s claim record');await wait(880);
 var amt=txt.match(/claim[^\n]*Rs\s*[\d,]+/i);
 var says='';L.forEach(function(l){if(/not reproduced|maintained on the broker/i.test(l))says=l.trim();});
-T.done(st,'searched kolhapur-schedule.txt\nclaim amount         '+(amt?amt[0]:'no match')+'\nthe document says    "'+says+'"',!amt);
-st=T.add('Checking BrokerSoft');var bs=await getJson('brokersoft-REN-2026-04417.json');await wait(520);
-T.done(st,'prior_year_claims    '+JSON.stringify(bs.prior_year_claims)+'\nnote                 '+bs.prior_year_claims_note,bs.prior_year_claims===null);
-st=T.add('Stopping');await wait(360);
-T.done(st,'required field       prior_year_claims\nfound in             neither the schedule nor BrokerSoft\npremium basis        '+bs.premium_basis+'\naction               halt \u00b7 no value written',true);
-dLine('asha','Asha','Six of the seven fields are in the schedule and each one carries the line it came from. The prior-year claim record is in neither place \u2014 the schedule says it is kept on our records, and BrokerSoft has it as null since the March migration. Premium is loaded on claims experience, so I cannot draft the renewal without it. I have not assumed zero.',false,a.c);
-logStop('asha','Stopped on '+chip('REN-2026-04417')+' \u2014 prior-year claim record is in neither the schedule nor BrokerSoft.','halt recorded \u00b7 no default written \u00b7 reviewer asked');
+s4.end('in the schedule   '+(amt?amt[0]:'no amount anywhere')+'\nin BrokerSoft     '+JSON.stringify(bs.prior_year_claims)+'\n\nthe schedule says it is kept on our own records',true);
+
+var s5=R.step('Stopping');await wait(420);
+s5.end('premium is loaded on claims experience \u00b7 no value written',true);
+R.note('halt recorded \u00b7 nothing defaulted');
+await said('asha','Six of six fields are in the schedule, each tied to its line. The claim record is in neither place. Premium is loaded on claims experience, so I cannot price this without it \u2014 and I will not put a zero there.',a.c);
+logStop('asha','Stopped on '+chip('REN-2026-04417')+' \u2014 prior-year claim record is in neither the schedule nor BrokerSoft.','halt recorded \u00b7 no default written');
 dChips(['Work the renewal queue','What would unblock you?']);}
 
-async function jobRavi(){var a=AGENTS.ravi,T=mkSteps(a.c),st;
-st=T.add('Reading the Pune Textiles schedule');
-var txt=await getText('pune-textiles-schedule.txt');var L=txt.split('\n');await wait(430);
-T.done(st,'pune-textiles-schedule.txt\n'+txt.length+' characters \u00b7 '+L.length+' lines');
-st=T.add('Extracting');await wait(640);
-var want=[['policy_no',/Policy no\s+(\S+)/i],['insured',/Insured\s+(.+)/],['period',/Period\s+(.+)/],['sum_insured',/Sum insured\s+(.+)/i],['premium',/Premium\s+(.+)/],['wording',/Wording\s+(.+)/]];
-var got={},out='';
-want.forEach(function(w){var m=txt.match(w[1]);var ln=0;
- if(m){L.forEach(function(l,i){if(!ln&&l.indexOf(m[0].trim())>-1)ln=i+1;});got[w[0]]=m[1].trim();
-  out+=pad(w[0])+m[1].trim()+'   line '+ln+'\n';}});
-T.done(st,out.trim());
-st=T.add('Cross-checking against BrokerSoft');var bs=await getJson('brokersoft-DG-SFSP-2026-204117.json');await wait(600);
-var diff=[];
-if((got.wording||'')!==bs.wording)diff.push(['wording',got.wording,bs.wording]);
-if((got.sum_insured||'').replace(/[^\d]/g,'')!==bs.sum_insured.replace(/[^\d]/g,''))diff.push(['sum_insured',got.sum_insured,bs.sum_insured]);
-var d='';diff.forEach(function(x){d+=pad(x[0])+'document: '+x[1]+'\n'+pad('')+'BrokerSoft: '+x[2]+'\n';});
-T.done(st,diff.length?(d.trim()+'\n\n'+diff.length+' mismatch \u00b7 flagged, not overwritten'):'all fields agree',diff.length>0);
-dLine('ravi','Ravi','Eleven fields out of three pages, each one tied to the line it came from. One disagreement: the schedule says '+(got.wording||'?')+' and BrokerSoft has '+bs.wording+'. I have flagged it rather than overwriting either side \u2014 a mismatch is a question for a person, not something I resolve quietly.',false,a.c);
-logStop('ravi','Flagged a wording mismatch on '+chip(bs.policy_no)+' \u2014 document says '+(got.wording||'?')+', BrokerSoft says '+bs.wording+'.','mismatch flagged \u00b7 neither record overwritten');
+async function jobRavi(){var a=AGENTS.ravi,R=run(a.c);
+var s1=R.step('Opening the schedule'),s2=R.step('Opening BrokerSoft');
+var pA=getText('pune-textiles-schedule.txt'),pB=getJson('brokersoft-DG-SFSP-2026-204117.json');
+var txt=await pA;await wait(280);var L=txt.split('\n');
+s1.end('pune-textiles-schedule.txt \u00b7 '+nf(txt.length)+' chars');
+var bs=await pB;await wait(460);s2.end('DG/SFSP/2026/204117');
+var s3=R.step('Extracting');await wait(820);
+var want=[['policy no',/Policy no\s+(\S+)/i],['insured',/Insured\s+(.+)/],['sum insured',/Sum insured\s+(.+)/i],['premium',/Premium\s+(.+)/],['wording',/Wording\s+(.+)/]];
+var got={},o='';want.forEach(function(w){var f=field(txt,L,w[1]);
+ if(f){got[w[0]]=f.v;o+=(w[0]+'            ').slice(0,13)+f.v+'  \u00b7 line '+f.ln+'\n';}});
+s3.end(o.trim());
+var s4=R.step('Cross-checking the two');await wait(900);
+var mis=got['wording']!==bs.wording;
+s4.end('wording   document '+got['wording']+'\n          BrokerSoft '+bs.wording+(mis?'\n\n1 disagreement \u00b7 flagged, neither overwritten':'\n\nagree'),mis);
+await said('ravi','Every field carries the line it came from. One disagreement: the document says '+got['wording']+', BrokerSoft says '+bs.wording+'. I have flagged it. A mismatch is a question for a person, not something I quietly pick a side on.',a.c);
+logStop('ravi','Flagged a wording mismatch on '+chip(bs.policy_no)+' \u2014 '+got['wording']+' against '+bs.wording+'.','flagged \u00b7 neither record overwritten');
 dChips(['Why not just take the document?']);}
 
-async function jobMeera(){var a=AGENTS.meera,T=mkSteps(a.c),st;
-st=T.add('Reading the September statement');
-var csv=await getText('deccan-statement-september.csv');await wait(430);
+async function jobMeera(){var a=AGENTS.meera,R=run(a.c);
+var s1=R.step('Opening the September statement');
+var csv=await getText('deccan-statement-september.csv');await wait(340);
 var rows=csv.trim().split('\n').slice(1).map(function(r){var p=r.split(',');return{ref:p[0],on:p[1],desc:p[2],amt:parseInt(p[3],10)};});
-T.done(st,'deccan-statement-september.csv\n'+rows.length+' rows');
-st=T.add('Finding the cut-off');await wait(380);
+s1.end(rows.length+' rows');
+var s2=R.step('Finding the cut-off');await wait(560);
 var co=rows.filter(function(r){return r.ref==='cut_off';})[0];
-T.done(st,'statement cut-off    '+co.on);
-st=T.add('Checking what was booked after it');await wait(620);
+s2.end('cut-off  '+co.on);
+var s3=R.step('Totalling what was booked after it');var bar=R.bar();await wait(1100);
 var late=rows.filter(function(r){return r.ref!=='cut_off'&&r.on>co.on;});
 var tot=late.reduce(function(x,r){return x+r.amt;},0),o='';
-late.forEach(function(r){o+=pad(r.ref)+r.on+'   \u20b9'+money(r.amt)+'   '+r.desc+'\n';});
-T.done(st,o+pad('')+'                  \u2014\u2014\u2014\u2014\u2014\u2014\u2014\n'+pad('total')+'            \u20b9'+money(tot),true);
-st=T.add('Stopping');await wait(340);
-T.done(st,'variance             \u20b9'+money(tot)+'\ntraced to            '+late.length+' endorsements booked after the cut-off\naction               needs a person to approve the write-off',true);
-dLine('meera','Meera','The September gap is \u20b9'+money(tot)+' and it is not a mystery \u2014 '+late.length+' endorsements were booked after the '+co.on+' cut-off. I have the references. I will not write it off on my own, so September stays open until somebody approves it.',false,a.c);
-logStop('meera','Traced the September variance to '+chip('\u20b9'+money(tot))+' across '+late.length+' late endorsements. Awaiting approval.','computed from the statement \u00b7 write-off gated on a person');
-dChips(['Approve the write-off','Show me the references']);}
+late.forEach(function(r){o+=r.ref+'  '+r.on+'  \u20b9'+nf(r.amt)+'\n';});
+bar.remove();
+s3.end(o+'          \u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\n          \u20b9'+nf(tot),true);
+var s4=R.step('Stopping');await wait(400);
+s4.end('write-off needs a person \u00b7 September stays open',true);
+await said('meera','The gap is \u20b9'+nf(tot)+' and it is not a mystery \u2014 '+late.length+' endorsements booked after the '+co.on+' cut-off. I have the references. I will not write it off myself.',a.c);
+logStop('meera','Traced the September variance to '+chip('\u20b9'+nf(tot))+' across '+late.length+' late endorsements.','computed from the statement \u00b7 write-off gated on a person');
+dChips(['Approve the write-off']);}
 
-async function jobNila(){var a=AGENTS.nila,T=mkSteps(a.c),st;
-st=T.add('Reading the wording register');
-var w=await getJson('motor-wordings.json');await wait(450);
-T.done(st,'motor-wordings.json\nclass                '+w['class']+'\nwordings on file     '+w.wordings.length);
-st=T.add('Checking which one is in force');await wait(600);
-var live=w.wordings.filter(function(x){return x.status==='in force';});
-var o='';live.forEach(function(x){o+=pad(x.id)+'effective from '+x.effective_from+'   '+(x.effective_to?('to '+x.effective_to):'open-ended')+'\n';});
-T.done(st,o.trim(),live.length>1);
-st=T.add('Looking for a replacement notice');await wait(500);
-var v21=w.wordings.filter(function(x){return x.replaces;})[0];
-T.done(st,'v2.1 claims to replace   '+(v21?v21.replaces:'\u2014')+'\nreplacement notice       '+(v21&&v21.replacement_notice_received?'received':'NOT received')+'\nregister note            '+w.note,true);
-st=T.add('Holding the notices');await wait(330);
-T.done(st,'wordings in force        '+live.length+' (expected 1)\naction                   notices paused \u00b7 no wording chosen',true);
-dLine('nila','Nila','Two wordings are both marked in force for this class, v2.0 from April and v2.1 from July, and no notice replacing v2.0 has come through. Picking one myself would decide a coverage question, so I have paused private car notices until underwriting confirms in writing.',false,a.c);
-logStop('nila','Paused private car notices \u2014 '+chip('v2.0')+' and '+chip('v2.1')+' both in force, no replacement notice received.','conflict logged \u00b7 no wording selected by the agent');
-dChips(['Who can confirm it?','Draft the confirmation request']);}
+async function jobNila(){var a=AGENTS.nila,R=run(a.c);
+var s1=R.step('Opening the wording register');
+var w=await getJson('motor-wordings.json');await wait(380);
+s1.end(w['class']+' \u00b7 '+w.wordings.length+' wordings on file');
+var s2=R.step('Which one is in force'),s3=R.step('Any replacement notice');
+await wait(700);
+var live=w.wordings.filter(function(x){return x.status==='in force';}),o='';
+live.forEach(function(x){o+=x.id+'  from '+x.effective_from+'  '+(x.effective_to||'open-ended')+'\n';});
+s2.end(o.trim()+'\n\n'+live.length+' in force \u00b7 expected 1',live.length>1);
+await wait(620);
+var v=w.wordings.filter(function(x){return x.replaces;})[0];
+s3.end('v2.1 replaces v2.0\nnotice received   '+(v&&v.replacement_notice_received?'yes':'no'),true);
+var s4=R.step('Holding the notices');await wait(380);
+s4.end('no wording chosen by me',true);
+await said('nila','Two wordings are both in force, April and July, and no notice replacing the older one has come through. Choosing between them decides a coverage question, so the notices stay paused until underwriting confirms in writing.',a.c);
+logStop('nila','Paused private car notices \u2014 '+chip('v2.0')+' and '+chip('v2.1')+' both in force.','conflict logged \u00b7 no wording selected');
+dChips(['Draft the confirmation request']);}
 
-async function jobKabir(){var a=AGENTS.kabir,T=mkSteps(a.c),st;
-st=T.add('Reading the intake note');
-var txt=await getText('fnol-TW-2026-88431.txt');await wait(430);
-T.done(st,'fnol-TW-2026-88431.txt\n'+txt.length+' characters');
-st=T.add('Pulling the claim out of it');await wait(620);
+async function jobKabir(){var a=AGENTS.kabir,R=run(a.c);
+var s1=R.step('Opening the intake note');
+var txt=await getText('fnol-TW-2026-88431.txt');await wait(330);
+s1.end('fnol-TW-2026-88431.txt \u00b7 '+nf(txt.length)+' chars');
+var s2=R.step('Reading the claim'),s3=R.step('Checking mandatory documents');
+await wait(720);
 var g=function(re){var m=txt.match(re);return m?m[1].trim():'not stated';};
-T.done(st,pad('policy_no')+g(/Policy no\s+(\S+)/i)+'\n'+pad('class')+g(/Class\s+(.+)/)+'\n'+pad('insured')+g(/Insured\s+(.+)/)+'\n'+pad('incident')+g(/Incident\s+(.+)/)+'\n'+pad('fir')+g(/FIR\s+(.+)/));
-st=T.add('Checking the mandatory documents');await wait(560);
+s2.end('policy    '+g(/Policy no\s+(\S+)/i)+'\nincident  '+g(/Incident\s+(.+)/)+'\nFIR       '+g(/FIR\s+(.+)/));
+await wait(680);
 var docs=txt.split('Documents received')[1].split('\n').filter(function(l){return /^\s+-\s/.test(l);});
-var o='',missing=[];
+var o='',miss=[];
 docs.forEach(function(l){var p=l.replace(/^\s+-\s*/,'').split(/\s{2,}/);
- var nm=p[0].trim(),stt=(p[1]||'').trim();
- if(/NOT RECEIVED/i.test(stt))missing.push(nm);
- o+=pad(nm)+stt+'\n';});
-T.done(st,o.trim(),missing.length>0);
-st=T.add('Stopping before anything is filed');await wait(340);
-T.done(st,'missing              '+missing.join(', ')+'\nguardrail            a claim is never filed with a mandatory document missing\naction               intake paused \u00b7 not filed',true);
-dLine('kabir','Kabir','Type, date, policy and FIR are all captured and the cover checks out against the policy in force on the loss date. The RC book scan has not come in, and that one is mandatory, so nothing is filed. I have paused the intake rather than sending it through with a gap.',false,a.c);
-logStop('kabir','Paused intake '+chip('TW-2026-88431')+' \u2014 RC book scan not received. Nothing filed.','mandatory document missing \u00b7 intake not submitted');
+ var nm=p[0].trim(),st=(p[1]||'').trim();
+ if(/NOT RECEIVED/i.test(st))miss.push(nm);
+ o+=(nm+'                ').slice(0,16)+st+'\n';});
+s3.end(o.trim(),miss.length>0);
+var s4=R.step('Stopping before anything is filed');await wait(400);
+s4.end('missing   '+miss.join(', ')+'\na claim is never filed with a mandatory document missing',true);
+await said('kabir','Type, date, policy and FIR are captured, and the cover checks out against the policy in force on the loss date. The RC book scan has not arrived and that one is mandatory, so nothing is filed.',a.c);
+logStop('kabir','Paused intake '+chip('TW-2026-88431')+' \u2014 RC book scan not received.','mandatory document missing \u00b7 nothing filed');
 dChips(['Chase the RC book scan']);}
 
-var JOBS={asha:{re:/finish|complete|go ahead|proceed|renewal|kolhapur|draft|do it|carry on|work (on|it)/i,run:jobAsha},
+var JOBS={asha:{re:/finish|complete|go ahead|proceed|renewal|kolhapur|draft|do it|carry on|work/i,run:jobAsha},
 ravi:{re:/extract|schedule|pune|document|pull/i,run:jobRavi},
 meera:{re:/gap|variance|reconcil|8,?240|endorse|close|statement|write.?off/i,run:jobMeera},
 nila:{re:/wording|conflict|which|v2|notice|resolve/i,run:jobNila},
 kabir:{re:/triage|intake|claim|theft|file|fnol/i,run:jobKabir}};
 
-var SMALL={asha:'I am holding the Kolhapur renewal until somebody gives me last year\u2019s claim record. Ask me to finish it and you will see exactly where I stop.',
-ravi:'Ask me to extract the Pune Textiles schedule and I will pull every field with the line it came from, then cross-check it against BrokerSoft.',
-meera:'Ask me about the September gap and I will walk the statement and show you where the \u20b98,240 went.',
-nila:'Ask me about the wording conflict and I will show you both entries in the register and what is missing.',
-kabir:'Ask me to triage the intake and I will show you what came in and what is still missing.'};
+var SMALL={asha:'Ask me to finish the Kolhapur renewal and you will see exactly where I stop.',
+ravi:'Ask me to extract the Pune Textiles schedule and I will cross-check it against BrokerSoft.',
+meera:'Ask me about the September gap and I will walk the statement.',
+nila:'Ask me about the wording conflict and I will show you the register.',
+kabir:'Ask me to triage the intake and I will show you what is missing.'};
 
 async function dSend(){
 if(DBUSY||!DK)return;
@@ -3098,33 +3144,33 @@ var t=($('dIn').value||'').trim();
 if(!t&&!DFILE)return;
 var a=AGENTS[DK],key=DK;$('dIn').value='';DBUSY=true;$('dGo').disabled=true;
 var shown=t.replace(/</g,'&lt;');
-if(DFILE)shown=(shown?shown+'<br>':'')+'<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border-radius:7px;padding:4px 9px;font-family:var(--font-mono);font-size:11px;margin-top:5px">\u25A4 '+DFILE.name+' \u00b7 '+DFILE.kb+' KB'+(DFILE.pages?' \u00b7 '+DFILE.pages+' pages':'')+'</span>';
+if(DFILE)shown=(shown?shown+'<br>':'')+'<span style="display:inline-flex;gap:6px;background:rgba(255,255,255,.06);border-radius:7px;padding:4px 9px;font-family:var(--font-mono);font-size:11px;margin-top:5px">\u25A4 '+DFILE.name+' \u00b7 '+DFILE.kb+' KB'+(DFILE.pages?' \u00b7 '+DFILE.pages+'p':'')+'</span>';
 dLine(key,'You',shown,true);
 var file=DFILE;DFILE=null;$('dFile').innerHTML='';
 
 if(file){
  var fh=hash('f'+file.name+S.prevHash);
  tlEntry(nowT(),a.n,a.c,a.role,'A document arrived from a person: '+chip(file.name)+' . I logged it before reading it.',workText('svc-'+key+' \u00b7 upload','sha recorded on receipt','registered \u00b7 nothing extracted yet',fh));S.prevHash=fh;
- feed(a.n,'Received '+file.name+' from Priya Nair. Logged on receipt.');
- var T=mkSteps(a.c),s1=T.add('Taking the document in');await wait(430);
- T.done(s1,pad('file')+file.name+'\n'+pad('size')+file.kb+' KB'+(file.pages?('\n'+pad('pages')+file.pages):'')+'\n'+pad('logged')+'before anything was read from it');
- dLine(key,a.n,'Logged on arrival. I will read it, pull each field with the line it came from, and cross-check what I find against BrokerSoft. Anything that is not in the document I will bring back to you rather than fill in.',false,a.c);
+ feed(a.n,'Received '+file.name+' from Priya Nair.');
+ var R=run(a.c),s1=R.step('Taking it in');await wait(500);
+ s1.end(file.name+' \u00b7 '+file.kb+' KB'+(file.pages?' \u00b7 '+file.pages+' pages':'')+'\nlogged before anything was read from it');
+ await said(key,'Logged on arrival. I will read it, pull each field with its line, and cross-check against BrokerSoft. Anything not in the document comes back to you.',a.c);
  DBUSY=false;$('dGo').disabled=false;return;}
 
 if(/queue|hundred|100|whole stack|work through|all of them/i.test(t)&&key==='asha'){DBUSY=false;$('dGo').disabled=false;return runQueue();}
 
 var J=JOBS[key];
 if(J&&J.re.test(t)){DBUSY=false;$('dGo').disabled=false;
- try{return await J.run();}catch(err){dLine(key,a.n,'I could not open the file I needed \u2014 '+String(err.message||err)+'.',false,a.c);return;}}
+ try{return await J.run();}catch(err){await said(key,'I could not open the file I needed \u2014 '+String(err.message||err)+'.',a.c);return;}}
 
 dThinking(a.c);
 var reply=null;
 if(cfg.live){var res=await callLLM(sysFor(a),ctxFor(key)+'\n\nUser says: '+t,false);
  if(res.raw)reply=res.raw.trim();
  $('dMode').textContent=res.raw?('live \u00b7 '+res.model):res.model;}
-else{await wait(520);}
+else{await wait(620);}
 dStop();DBUSY=false;$('dGo').disabled=false;
-dLine(key,a.n,(reply||SMALL[key]).replace(/</g,'&lt;').replace(/\n/g,'<br>'),false,a.c);}
+await said(key,(reply||SMALL[key]).replace(/\n/g,' '),a.c);}
 
 function pickFile(){$('dFileIn').click();}
 
