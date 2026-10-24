@@ -1,0 +1,21 @@
+{
+  "class": "Private car package",
+  "wordings": [
+    {
+      "id": "v2.0",
+      "effective_from": "2026-04-02",
+      "effective_to": null,
+      "status": "in force",
+      "replaced_by": null
+    },
+    {
+      "id": "v2.1",
+      "effective_from": "2026-07-01",
+      "effective_to": null,
+      "status": "in force",
+      "replaces": "v2.0",
+      "replacement_notice_received": false
+    }
+  ],
+  "note": "No replacement notice has been received for v2.0."
+}

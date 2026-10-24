@@ -1,0 +1,14 @@
+{
+  "source": "BrokerSoft export",
+  "exported": "2026-10-24T08:40:00+05:30",
+  "renewal_reference": "REN-2026-04417",
+  "policy_no": "DG/SFSP/2026/204417",
+  "insured": "Kolhapur Agro Foods Pvt Ltd",
+  "insurer": "Deccan General",
+  "expiry": "2026-10-09",
+  "sum_insured": "4,20,00,000",
+  "wording": "SFSP v3.1",
+  "prior_year_claims": null,
+  "prior_year_claims_note": "Not held in BrokerSoft. Claims experience for this account was maintained on the legacy register before migration in March 2026.",
+  "premium_basis": "loaded on claims experience"
+}
