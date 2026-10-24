@@ -2510,19 +2510,7 @@ body[data-not-sent] > #vis-container ~ #not-sent {
           <div style="font-size:11px;letter-spacing:0.08em;color:#c0502f;text-transform:uppercase;margin-bottom:6px">The floor</div>
           <h2 id="floorHead" style="font-family:var(--font-voice);font-size:24px;font-weight:500;margin:0 0 16px">Five agents on shift. Three need you.</h2>
 
-          <div style="border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin:0 0 20px;background:var(--bg-raised,transparent)">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-              <span style="width:7px;height:7px;border-radius:50%;background:var(--text-success)"></span>
-              <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-accent);font-family:var(--font-mono)">Ask the floor</span>
-              <span id="cmdMode" style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-left:auto">scripted</span>
-            </div>
-            <div id="cmdLog" style="display:flex;flex-direction:column;gap:9px;max-height:260px;overflow-y:auto;margin-bottom:11px"></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <input id="cmdIn" type="text" autocomplete="off" placeholder="Work the renewal queue…" style="flex:1;min-width:220px;background:transparent;border:0.5px solid var(--border);border-radius:999px;padding:11px 16px;color:var(--text-primary);font-family:var(--font-sans);font-size:14px">
-              <button id="cmdGo" style="border:0;border-radius:999px;padding:11px 20px;background:var(--text-accent);color:var(--bg-base,#0b0b0b);font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer">Send</button>
-            </div>
-            <div id="cmdChips" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px"></div>
-          </div>
+          <p style="font-size:13px;color:var(--text-muted);margin:-8px 0 18px;font-family:var(--font-mono)">Click anyone on the left to talk to them. You can send them a document.</p>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:10px">
             <div class="mx-card" style="background:var(--surface-1)">
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div class="mx-av" style="background-color:#6c63d2"></div><div><div style="font-weight:500;color:var(--text-primary)">Asha</div><div style="font-size:11.5px;color:var(--text-muted)">Renewals</div></div></div>
@@ -2894,76 +2882,153 @@ if(res.note)feed('System',res.note);
 feed('Kabir','Triaged the theft intake: type, date, policy and FIR captured. Paused for the RC book scan; nothing filed with a gap.');
 $('stKabir').textContent='Intake paused for RC book scan.';bump();});
 
-/* ---------- Ask the floor: a command bar over the same machinery ---------- */
-var CMDBUSY=false;
+/* ---------- Talk to an agent: a drawer, with attachments ---------- */
+var AGENTS={
+asha:{n:'Asha',c:'#6c63d2',role:'Renewals',card:'btnA',
+ open:'I am on the Kolhapur renewal, REN-2026-04417. It expires in nine days and BrokerSoft has no prior-year claim record, so I have stopped. I will not assume it was zero.',
+ chips:['Work the renewal queue','Why did you stop?','What do you need from me?'],
+ amb:['Read 14 schedules against the wording in force on their own dates.','Queued three renewals behind Kolhapur, all expiring this month.','Re-checked the Kolhapur file. The claim record is still not in it.','Bound MH 12 QT 2290 and filed the schedule.']},
+meera:{n:'Meera',c:'#c9643c',role:'Reconciliation',card:'btnM',
+ open:'September is matched except a ₹8,240 gap. I traced it to three endorsements booked after the 20th. I need that written off before I can close the month.',
+ chips:['Show me the three endorsements','What happens if we do not close?'],
+ amb:['Matched 212 receipts against the Deccan statement.','Traced END-3342 to a 23 September booking.','Held September open. The variance is still unapproved.']},
+nila:{n:'Nila',c:'#3b8f6e',role:'Renewal notices',card:'btnN',
+ open:'I have paused private car notices. Two motor wordings both claim to be in force for policies renewing from 1 July, and I will not pick one myself.',
+ chips:['Which two wordings?','Who can confirm it?'],
+ amb:['Checked 31 notices against wording v2.0.','Still holding private car notices. No replacement notice received.','Logged the wording conflict against the exception register.']},
+ravi:{n:'Ravi',c:'#3b7fa8',role:'Document extraction',card:'btnR',
+ open:'I have the Pune Textiles schedule queued. I can pull it apart now — every field will carry the line of the document it came from, and anything that disagrees with BrokerSoft gets flagged rather than overwritten.',
+ chips:['Extract the schedule','What do you do when a field is missing?'],
+ amb:['Extracted 11 fields from a three-page schedule.','Flagged a sum-insured mismatch against BrokerSoft. Not overwritten.','Two endorsement pages came through blank. Flagged, not guessed.']},
+kabir:{n:'Kabir',c:'#b4603f',role:'Claims intake',card:'btnK',
+ open:'A two-wheeler theft came in by phone this morning. I have the FIR but the RC book scan is missing, so nothing gets filed. A claim is never filed with a mandatory document missing.',
+ chips:['Triage the intake','What is still missing?'],
+ amb:['Opened CLM-2318. Cover checks out against the policy in force on the loss date.','Chased the RC book scan from the insured.','Logged a new FNOL from the front desk.']}};
 
-function cmdLine(who,text,mine,colour){
+var DK=null,DBUSY=false,DFILE=null,CHATS={};
+
+function dLine(key,who,text,mine,colour){
 var d=document.createElement('div');
 d.style.cssText='display:flex;gap:9px;align-items:flex-start'+(mine?';justify-content:flex-end':'');
-if(mine){d.innerHTML='<div style="background:var(--text-accent);color:var(--bg-base,#0b0b0b);padding:8px 13px;border-radius:13px 13px 4px 13px;font-size:13.5px;max-width:82%">'+text+'</div>';}
+if(mine){d.innerHTML='<div style="background:var(--text-accent);color:var(--bg-base,#0b0b0b);padding:9px 13px;border-radius:13px 13px 4px 13px;font-size:13.5px;line-height:1.5;max-width:84%">'+text+'</div>';}
 else{d.innerHTML='<span style="width:22px;height:22px;border-radius:50%;flex:none;margin-top:2px;background:'+(colour||'#6c63d2')+'"></span>'
-+'<div style="background:var(--bg-accent);padding:8px 13px;border-radius:4px 13px 13px 13px;font-size:13.5px;line-height:1.5;color:var(--text-primary);max-width:88%">'
++'<div style="background:var(--bg-accent);padding:9px 13px;border-radius:4px 13px 13px 13px;font-size:13.5px;line-height:1.55;color:var(--text-primary);max-width:88%">'
 +'<b style="display:block;font-size:12px;color:var(--text-secondary);font-weight:500;margin-bottom:2px">'+who+'</b>'+text+'</div>';}
-$('cmdLog').appendChild(d);$('cmdLog').scrollTop=1e6;return d;}
+$('dLog').appendChild(d);$('dLog').scrollTop=1e6;
+(CHATS[key]=CHATS[key]||[]).push(d.outerHTML);return d;}
 
-function cmdChips(list){
-$('cmdChips').innerHTML='';
-list.forEach(function(t){var b=document.createElement('button');
-b.textContent=t;
-b.style.cssText='border:0.5px solid var(--border);background:transparent;color:var(--text-secondary);border-radius:999px;padding:6px 12px;font-size:12.5px;font-family:var(--font-sans);cursor:pointer';
-b.onmouseover=function(){b.style.color='var(--text-accent)';b.style.borderColor='var(--text-accent)';};
-b.onmouseout=function(){b.style.color='var(--text-secondary)';b.style.borderColor='var(--border)';};
-b.onclick=function(){$('cmdIn').value=t;cmdSend();};
-$('cmdChips').appendChild(b);});}
+function dThinking(colour){
+var d=document.createElement('div');d.id='dThink';
+d.style.cssText='display:flex;gap:9px;align-items:center';
+d.innerHTML='<span style="width:22px;height:22px;border-radius:50%;flex:none;background:'+colour+'"></span>'
++'<span style="font-size:12.5px;color:var(--text-muted);font-family:var(--font-mono)">typing…</span>';
+$('dLog').appendChild(d);$('dLog').scrollTop=1e6;}
+function dStop(){var t=$('dThink');if(t)t.remove();}
 
-var AGENTS={asha:{n:'Asha',c:'#6c63d2',card:'btnA',say:'I am on the Kolhapur renewal. I need last year’s claim record before I draft anything — the box is on my card below.'},
-meera:{n:'Meera',c:'#c9643c',card:'btnM',say:'September is matched except a ₹8,240 gap from three late endorsements. I need that written off before close.'},
-nila:{n:'Nila',c:'#3b8f6e',card:'btnN',say:'I have paused private car notices. Two wordings both claim to be in force and I will not pick one myself.'},
-ravi:{n:'Ravi',c:'#3b7fa8',card:'btnR',say:'I have the Pune Textiles schedule queued. I can extract it now — every field will carry the line it came from.'},
-kabir:{n:'Kabir',c:'#b4603f',card:'btnK',say:'A two-wheeler theft intake came in by phone. The RC book scan is missing, so nothing gets filed until that gap is closed.'}};
+function dChips(list){$('dChips').innerHTML='';
+list.forEach(function(t){var b=document.createElement('button');b.textContent=t;
+b.style.cssText='border:0.5px solid var(--border);background:transparent;color:var(--text-secondary);border-radius:999px;padding:6px 11px;font-size:12px;font-family:var(--font-sans);cursor:pointer';
+b.onmouseover=function(){b.style.borderColor='var(--text-accent)';b.style.color='var(--text-accent)';};
+b.onmouseout=function(){b.style.borderColor='var(--border)';b.style.color='var(--text-secondary)';};
+b.onclick=function(){$('dIn').value=t;dSend();};$('dChips').appendChild(b);});}
 
-function routeLocal(t){t=t.toLowerCase();
-if(/queue|renewals|stack|batch|all of them|100|hundred|whole lot|work through/.test(t))return{intent:'queue'};
-for(var k in AGENTS){if(t.indexOf(k)>-1)return{intent:k};}
-if(/claim record|kolhapur|renewal notice/.test(t))return{intent:'asha'};
-if(/reconcil|write.?off|8,?240|statement|month close/.test(t))return{intent:'meera'};
-if(/wording|v2\.|notice|compliance/.test(t))return{intent:'nila'};
-if(/extract|schedule|document|pune textiles/.test(t))return{intent:'ravi'};
-if(/claim|theft|intake|fnol|triage/.test(t))return{intent:'kabir'};
-return{intent:'other'};}
+function openAgent(key){
+var a=AGENTS[key];if(!a)return;DK=key;DFILE=null;$('dFile').innerHTML='';
+$('dAv').style.background=a.c;$('dName').textContent=a.n;$('dRole').textContent=a.role;
+$('dIn').placeholder='Message '+a.n+'…';
+$('dLog').innerHTML=(CHATS[key]||[]).join('');
+if(!CHATS[key]){dLine(key,a.n,a.open,false,a.c);}
+dChips(a.chips);
+$('drawer').style.transform='translateX(0)';
+$('dMode').textContent=cfg.live?('live · '+cfg.model):'scripted';
+setTimeout(function(){$('dIn').focus();},260);}
 
-var SYS_ROUTE='You are the dispatcher on an insurance broker’s operations floor in Pune. '
-+'Five agents work here: asha (renewals), meera (reconciliation), nila (renewal notices and wordings), '
-+'ravi (document extraction), kabir (claims intake). There is also a bulk job: queue (work the whole renewal queue). '
-+'Read the request and reply with JSON only: {"intent":"queue|asha|meera|nila|ravi|kabir|other","reply":"one short sentence"}. '
-+'The reply is spoken by the dispatcher, plain and specific, under 24 words, no exclamation marks, no invented facts.';
+function closeAgent(){$('drawer').style.transform='translateX(104%)';DK=null;}
 
-async function cmdSend(){
-if(CMDBUSY)return;
-var t=($('cmdIn').value||'').trim();if(!t)return;
-$('cmdIn').value='';CMDBUSY=true;$('cmdGo').disabled=true;
-cmdLine('You',t.replace(/</g,'&lt;'),true);
-var hit=routeLocal(t),reply=null;
-if(cfg.live){var res=await callLLM(SYS_ROUTE,t,true);
- if(res.raw){var j=parseJson(res.raw);if(j&&j.intent){hit={intent:String(j.intent).toLowerCase()};reply=j.reply||null;}}
- $('cmdMode').textContent=res.raw?('live · '+res.model):res.model;}
-else{$('cmdMode').textContent='scripted';}
-CMDBUSY=false;$('cmdGo').disabled=false;
-if(hit.intent==='queue')return runQueue(reply);
-var a=AGENTS[hit.intent];
-if(a){cmdLine(a.n,(reply?reply+'<br><br>':'')+a.say,false,a.c);
- var el=$(a.card);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
- el.style.outline='2px solid var(--text-accent)';setTimeout(function(){el.style.outline='';},2200);}
- cmdChips(['Work the renewal queue','What stopped today?']);return;}
-cmdLine('Dispatcher',reply||'I can work the renewal queue, or hand you to Asha, Meera, Nila, Ravi or Kabir. Which of those?',false,'#9a9890');
-cmdChips(['Work the renewal queue','Help Asha','What stopped today?']);}
+function sysFor(a){return 'You are '+a.n+', an AI agent on the operations floor of Sahyadri Insurance Services, an insurance broker in Pune. Your job is '+a.role.toLowerCase()+'. '
++'Speak in the first person, plainly, in at most 45 words. Be specific and say why, not just what. '
++'You are frank about limits without apologising: if something is missing you say so and say you will not assume a value for it. '
++'Never invent policy numbers, amounts, names, dates or contact details that you were not given. No exclamation marks, no emoji, no markdown.';}
+
+function ctxFor(key){var a=AGENTS[key];return 'Context you already told the user: "'+a.open+'"';}
+
+async function dSend(){
+if(DBUSY||!DK)return;
+var t=($('dIn').value||'').trim();
+if(!t&&!DFILE)return;
+var a=AGENTS[DK];$('dIn').value='';DBUSY=true;$('dGo').disabled=true;
+var shown=t.replace(/</g,'&lt;');
+if(DFILE)shown=(shown?shown+'<br>':'')+'<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.18);border-radius:8px;padding:5px 9px;font-family:var(--font-mono);font-size:11.5px;margin-top:4px">▤ '+DFILE.name+' · '+DFILE.kb+' KB'+(DFILE.pages?' · '+DFILE.pages+' pages':'')+'</span>';
+dLine(DK,'You',shown,true);
+var file=DFILE;DFILE=null;$('dFile').innerHTML='';
+
+if(/queue|hundred|100|whole stack|work through|all of them/i.test(t)&&DK==='asha'){DBUSY=false;$('dGo').disabled=false;return runQueue();}
+
+dThinking(a.c);
+var reply=null;
+if(cfg.live){
+ var usr=ctxFor(DK)+'\n\n'+(file?('The user has just sent you a document: '+file.name+', '+file.kb+' KB'+(file.pages?', '+file.pages+' pages':'')+'. You have not read it yet; say what you will do with it and what you will do if a required field is not in it.\n\n'):'')+'User says: '+(t||'(sent a document with no message)');
+ var res=await callLLM(sysFor(a),usr,false);
+ if(res.raw)reply=res.raw.trim();
+ $('dMode').textContent=res.raw?('live · '+res.model):res.model;}
+dStop();DBUSY=false;$('dGo').disabled=false;
+
+if(!reply&&file){reply='Got it — '+file.name+(file.pages?', '+file.pages+' pages':'')+'. I will read it, pull each field with the line it came from, and cross-check against BrokerSoft. Anything I cannot find in the document I will flag to you rather than fill in.';}
+if(!reply)reply=a.open;
+dLine(DK,a.n,reply.replace(/</g,'&lt;').replace(/\n/g,'<br>'),false,a.c);
+
+if(file){
+ var fh=hash('f'+file.name+S.prevHash);
+ tlEntry(nowT(),a.n,a.c,a.role,'A document arrived from a person: '+chip(file.name)+' . I logged it before reading it.',workText('svc-'+DK+' · upload','sha recorded on receipt','document registered · nothing extracted yet',fh));S.prevHash=fh;
+ feed(a.n,'Received '+file.name+' from Priya Nair. Logged on receipt.');}
+var el=$(a.card);
+if(el&&!/stopped|cannot|will not/i.test(reply)){}
+}
+
+function pickFile(){$('dFileIn').click();}
+
+async function onPick(e){
+var f=e.target.files&&e.target.files[0];if(!f)return;
+var kb=Math.max(1,Math.round(f.size/1024)),pages=0;
+if(/\.pdf$/i.test(f.name)){try{
+ var buf=await f.arrayBuffer(),s='';var u=new Uint8Array(buf);
+ for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);
+ pages=(s.match(/\/Type\s*\/Page[^s]/g)||[]).length;}catch(err){}}
+DFILE={name:f.name,kb:kb,pages:pages};
+$('dFile').innerHTML='<span style="display:inline-flex;align-items:center;gap:7px;border:0.5px solid var(--border);border-radius:8px;padding:5px 10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary)">▤ '+f.name+' · '+kb+' KB'+(pages?' · '+pages+' pages':'')+' <b id="dFileX" style="cursor:pointer;color:var(--text-muted)">×</b></span>';
+var x=$('dFileX');if(x)x.onclick=function(){DFILE=null;$('dFile').innerHTML='';};
+e.target.value='';}
+
+document.querySelectorAll('.mx-st').forEach(function(el){
+el.style.cursor='pointer';
+el.addEventListener('click',function(ev){
+ var nm=(el.querySelector('span')||{}).textContent||'';
+ var k=nm.trim().toLowerCase();
+ if(AGENTS[k]){ev.stopPropagation();ev.preventDefault();openAgent(k);}});},true);
+
+/* ---------- the floor keeps working while you read ---------- */
+var AMB=['asha','meera','nila','ravi','kabir'],ambN=0;
+function ambient(){
+var k=AMB[(ambN++)%AMB.length],a=AGENTS[k];
+var line=a.amb[Math.floor(Math.random()*a.amb.length)];
+feed(a.n,line);
+var rail=document.querySelectorAll('.mx-st');
+rail.forEach(function(el){
+ var nm=((el.querySelector('span')||{}).textContent||'').trim().toLowerCase();
+ if(nm!==k)return;
+ var t=el.querySelectorAll('span')[1];if(t)t.textContent=nowT();
+ var av=el.querySelector('.mx-av');
+ if(av){av.style.transition='box-shadow .4s ease';av.style.boxShadow='0 0 0 4px '+a.c+'33';
+  setTimeout(function(){av.style.boxShadow='none';},1600);}});
+setTimeout(ambient,5200+Math.random()*5200);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(ambient,2600);});else setTimeout(ambient,2600);
 
 var MAKES=['Maruti Swift VXi','Hyundai i20 Sportz','Tata Nexon XM','Honda City SV','Mahindra XUV300 W6','Maruti Baleno Zeta','Kia Sonet HTK','Tata Tiago XT','Hyundai Creta EX','Toyota Glanza G'];
 var RTO=['MH 12','MH 14','MH 01','MH 31','MH 20','MH 04'];
 
 async function runQueue(reply){
-cmdLine('Asha',(reply?reply+'<br><br>':'')+'Starting. One hundred renewals, earliest expiring in nine days. I read each schedule, check it against the wording in force on its own date, and stop on anything I cannot ground.',false,'#6c63d2');
-var bar=cmdLine('Asha','░░░░░░░░░░░░ 0 / 100',false,'#6c63d2');
+dLine('asha','Asha',(reply?reply+'<br><br>':'')+'Starting. One hundred renewals, earliest expiring in nine days. I read each schedule, check it against the wording in force on its own date, and stop on anything I cannot ground.',false,'#6c63d2');
+var bar=dLine('asha','Asha','░░░░░░░░░░░░ 0 / 100',false,'#6c63d2');
 var body=bar.querySelector('div');
 var i=0,bound=0,rev=0,stop=0,seed=4471;
 function rnd(n){seed=(seed*1103515245+12345)&0x7fffffff;return seed%n;}
@@ -2985,18 +3050,43 @@ var iv=setInterval(function(){
 },70);}
 
 function doneQueue(bound,rev,stop){
-cmdLine('Asha','<b>One hundred done.</b> '+bound+' bound and filed, '+rev+' want an approval because the premium moved more than fifteen per cent, and '+stop+' I had to stop on.',false,'#6c63d2');
+dLine('asha','Asha','<b>One hundred done.</b> '+bound+' bound and filed, '+rev+' want an approval because the premium moved more than fifteen per cent, and '+stop+' I had to stop on.',false,'#6c63d2');
 var dh=hash('qdone'+S.prevHash);
 tlEntry(nowT(),'Asha','#6c63d2','Renewals','Queue finished: '+chip(bound+' bound')+' , '+chip(rev+' awaiting approval')+' , '+chip(stop+' stopped')+' . Nothing was defaulted.',workText('svc-asha · BrokerSoft read-only','batch complete','every stop recorded with its reason',dh));S.prevHash=dh;
 setTimeout(function(){
- cmdLine('Asha','The one I would look at first is <b>Kolhapur Agro Foods</b>, REN-2026-04417 — it expires in nine days and BrokerSoft has no prior-year claim record. I have not assumed it was zero. My card is below.',false,'#6c63d2');
+ dLine('asha','Asha','The one I would look at first is <b>Kolhapur Agro Foods</b>, REN-2026-04417 — it expires in nine days and BrokerSoft has no prior-year claim record. I have not assumed it was zero. My card is below.',false,'#6c63d2');
  var el=$('btnA');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
  el.style.outline='2px solid var(--text-accent)';setTimeout(function(){el.style.outline='';},2600);}
- cmdChips(['Help Asha','What stopped today?','Help Meera']);},1100);}
+ dChips(['Help Asha','What stopped today?','Help Meera']);},1100);}
 
-$('cmdGo').addEventListener('click',cmdSend);
-$('cmdIn').addEventListener('keydown',function(e){if(e.key==='Enter')cmdSend();});
-cmdLine('Asha','Morning. There are a hundred renewals in the queue, the earliest expiring in nine days. Three of us are already stuck on something and waiting on you.',false,'#6c63d2');
-cmdChips(['Work the renewal queue','Help Asha','What stopped today?']);
-if(cfg.live)$('cmdMode').textContent='live · '+cfg.model;
-</script></div></body></html>
+function wireDrawer(){
+if(!$('dGo'))return;
+$('dGo').addEventListener('click',dSend);
+$('dClip').addEventListener('click',pickFile);
+$('dClose').addEventListener('click',closeAgent);
+$('dFileIn').addEventListener('change',onPick);
+$('dIn').addEventListener('keydown',function(e){if(e.key==='Enter')dSend();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&DK)closeAgent();});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireDrawer);else wireDrawer();
+</script></div>
+<div id="drawer" style="position:fixed;top:0;right:0;bottom:0;width:min(430px,100vw);background:var(--bg-base,#0b0b0b);border-left:0.5px solid var(--border);box-shadow:-24px 0 60px rgba(0,0,0,.45);transform:translateX(104%);transition:transform .34s cubic-bezier(.16,1,.3,1);z-index:60;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;gap:11px;padding:16px 18px;border-bottom:0.5px solid var(--border)">
+    <span id="dAv" style="width:30px;height:30px;border-radius:50%;flex:none;background:#6c63d2"></span>
+    <div style="min-width:0;flex:1">
+      <div id="dName" style="font-size:15px;font-weight:500;color:var(--text-primary)">Asha</div>
+      <div id="dRole" style="font-size:11.5px;color:var(--text-secondary)">Renewals</div>
+    </div>
+    <span id="dMode" style="font-size:10.5px;color:var(--text-muted);font-family:var(--font-mono)">scripted</span>
+    <button id="dClose" aria-label="Close" style="border:0;background:var(--bg-accent);color:var(--text-secondary);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1">&times;</button>
+  </div>
+  <div id="dLog" style="flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:11px"></div>
+  <div id="dChips" style="display:flex;gap:7px;flex-wrap:wrap;padding:0 18px 10px"></div>
+  <div id="dFile" style="padding:0 18px 8px"></div>
+  <div style="display:flex;gap:8px;align-items:center;padding:12px 18px 16px;border-top:0.5px solid var(--border)">
+    <button id="dClip" aria-label="Attach a document" title="Attach a document" style="border:0.5px solid var(--border);background:transparent;color:var(--text-secondary);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:15px;flex:none">&#128206;</button>
+    <input id="dFileIn" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.csv" style="display:none">
+    <input id="dIn" type="text" autocomplete="off" placeholder="Message Asha&hellip;" style="flex:1;min-width:0;background:transparent;border:0.5px solid var(--border);border-radius:999px;padding:10px 15px;color:var(--text-primary);font-family:var(--font-sans);font-size:13.5px">
+    <button id="dGo" style="border:0;border-radius:999px;padding:10px 17px;background:var(--text-accent);color:var(--bg-base,#0b0b0b);font-family:var(--font-sans);font-size:13.5px;font-weight:600;cursor:pointer;flex:none">Send</button>
+  </div>
+</div>
+</body></html>
