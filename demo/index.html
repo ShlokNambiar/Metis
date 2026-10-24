@@ -2509,6 +2509,20 @@ body[data-not-sent] > #vis-container ~ #not-sent {
         <div id="vFloor">
           <div style="font-size:11px;letter-spacing:0.08em;color:#c0502f;text-transform:uppercase;margin-bottom:6px">The floor</div>
           <h2 id="floorHead" style="font-family:var(--font-voice);font-size:24px;font-weight:500;margin:0 0 16px">Five agents on shift. Three need you.</h2>
+
+          <div style="border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin:0 0 20px;background:var(--bg-raised,transparent)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--text-success)"></span>
+              <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-accent);font-family:var(--font-mono)">Ask the floor</span>
+              <span id="cmdMode" style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-left:auto">scripted</span>
+            </div>
+            <div id="cmdLog" style="display:flex;flex-direction:column;gap:9px;max-height:260px;overflow-y:auto;margin-bottom:11px"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input id="cmdIn" type="text" autocomplete="off" placeholder="Work the renewal queue…" style="flex:1;min-width:220px;background:transparent;border:0.5px solid var(--border);border-radius:999px;padding:11px 16px;color:var(--text-primary);font-family:var(--font-sans);font-size:14px">
+              <button id="cmdGo" style="border:0;border-radius:999px;padding:11px 20px;background:var(--text-accent);color:var(--bg-base,#0b0b0b);font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer">Send</button>
+            </div>
+            <div id="cmdChips" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px"></div>
+          </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:10px">
             <div class="mx-card" style="background:var(--surface-1)">
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div class="mx-av" style="background-color:#6c63d2"></div><div><div style="font-weight:500;color:var(--text-primary)">Asha</div><div style="font-size:11.5px;color:var(--text-muted)">Renewals</div></div></div>
@@ -2666,7 +2680,7 @@ RC book scan pending from customer.</div>
           <p style="font-size:13px;color:var(--text-secondary);margin:0 0 14px">Your key stays in this browser (localStorage) and is sent only to the provider you pick. Guardrails: one call per action, up to 5 per full run, max 600 tokens, low reasoning effort, 12 s cooldown between calls, 20 calls per session. If a live call fails or returns bad output, the cached result is served so the demo never breaks.</p>
           <div class="mx-card" style="max-width:560px">
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px">
-              <div><label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px">Provider</label><select id="selProvider"><option value="groq">Groq (free tier)</option><option value="gemini">Google Gemini (free tier)</option></select></div>
+              <div><label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px">Provider</label><select id="selProvider"><option value="groq">Groq (free tier)</option><option value="gemini">Google Gemini (free tier)</option><option value="anthropic">Anthropic Claude</option></select></div>
               <div><label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px">Model</label><input id="inpModel" type="text" placeholder="openai/gpt-oss-20b"></div>
               <div><label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px">API key</label><input id="inpKey" type="password" placeholder="gsk_..."></div>
             </div>
@@ -2759,6 +2773,10 @@ if(cfg.model.indexOf('gpt-oss')>-1||cfg.model.indexOf('deepseek')>-1||cfg.model.
 var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.key},body:JSON.stringify(body)});
 if(!r.ok)throw new Error('HTTP '+r.status);
 var j=await r.json();text=(j.choices[0].message.content||'').trim();mu=j.model||cfg.model;}
+else if(cfg.provider==='anthropic'){
+var ra=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':cfg.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:cfg.model,max_tokens:600,temperature:jsonMode?0:0.3,system:sys,messages:[{role:'user',content:usr}]})});
+if(!ra.ok)throw new Error('HTTP '+ra.status);
+var ja=await ra.json();text='';try{text=(ja.content||[]).map(function(p){return p.text||''}).join('').trim();}catch(e){}mu=ja.model||cfg.model;}
 else{var r2=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(cfg.model)+':generateContent?key='+encodeURIComponent(cfg.key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:sys+'\n\n'+usr}]}],generationConfig:{maxOutputTokens:600,temperature:jsonMode?0:0.3}})});
 if(!r2.ok)throw new Error('HTTP '+r2.status);
 var j2=await r2.json();text='';try{text=j2.candidates[0].content.parts.map(function(p){return p.text||''}).join('').trim();}catch(e){}mu=cfg.model;}
@@ -2875,4 +2893,110 @@ $('wrkK').textContent=workText('svc-kabir · claims intake only','max 600 tokens
 if(res.note)feed('System',res.note);
 feed('Kabir','Triaged the theft intake: type, date, policy and FIR captured. Paused for the RC book scan; nothing filed with a gap.');
 $('stKabir').textContent='Intake paused for RC book scan.';bump();});
+
+/* ---------- Ask the floor: a command bar over the same machinery ---------- */
+var CMDBUSY=false;
+
+function cmdLine(who,text,mine,colour){
+var d=document.createElement('div');
+d.style.cssText='display:flex;gap:9px;align-items:flex-start'+(mine?';justify-content:flex-end':'');
+if(mine){d.innerHTML='<div style="background:var(--text-accent);color:var(--bg-base,#0b0b0b);padding:8px 13px;border-radius:13px 13px 4px 13px;font-size:13.5px;max-width:82%">'+text+'</div>';}
+else{d.innerHTML='<span style="width:22px;height:22px;border-radius:50%;flex:none;margin-top:2px;background:'+(colour||'#6c63d2')+'"></span>'
++'<div style="background:var(--bg-accent);padding:8px 13px;border-radius:4px 13px 13px 13px;font-size:13.5px;line-height:1.5;color:var(--text-primary);max-width:88%">'
++'<b style="display:block;font-size:12px;color:var(--text-secondary);font-weight:500;margin-bottom:2px">'+who+'</b>'+text+'</div>';}
+$('cmdLog').appendChild(d);$('cmdLog').scrollTop=1e6;return d;}
+
+function cmdChips(list){
+$('cmdChips').innerHTML='';
+list.forEach(function(t){var b=document.createElement('button');
+b.textContent=t;
+b.style.cssText='border:0.5px solid var(--border);background:transparent;color:var(--text-secondary);border-radius:999px;padding:6px 12px;font-size:12.5px;font-family:var(--font-sans);cursor:pointer';
+b.onmouseover=function(){b.style.color='var(--text-accent)';b.style.borderColor='var(--text-accent)';};
+b.onmouseout=function(){b.style.color='var(--text-secondary)';b.style.borderColor='var(--border)';};
+b.onclick=function(){$('cmdIn').value=t;cmdSend();};
+$('cmdChips').appendChild(b);});}
+
+var AGENTS={asha:{n:'Asha',c:'#6c63d2',card:'btnA',say:'I am on the Kolhapur renewal. I need last year’s claim record before I draft anything — the box is on my card below.'},
+meera:{n:'Meera',c:'#c9643c',card:'btnM',say:'September is matched except a ₹8,240 gap from three late endorsements. I need that written off before close.'},
+nila:{n:'Nila',c:'#3b8f6e',card:'btnN',say:'I have paused private car notices. Two wordings both claim to be in force and I will not pick one myself.'},
+ravi:{n:'Ravi',c:'#3b7fa8',card:'btnR',say:'I have the Pune Textiles schedule queued. I can extract it now — every field will carry the line it came from.'},
+kabir:{n:'Kabir',c:'#b4603f',card:'btnK',say:'A two-wheeler theft intake came in by phone. The RC book scan is missing, so nothing gets filed until that gap is closed.'}};
+
+function routeLocal(t){t=t.toLowerCase();
+if(/queue|renewals|stack|batch|all of them|100|hundred|whole lot|work through/.test(t))return{intent:'queue'};
+for(var k in AGENTS){if(t.indexOf(k)>-1)return{intent:k};}
+if(/claim record|kolhapur|renewal notice/.test(t))return{intent:'asha'};
+if(/reconcil|write.?off|8,?240|statement|month close/.test(t))return{intent:'meera'};
+if(/wording|v2\.|notice|compliance/.test(t))return{intent:'nila'};
+if(/extract|schedule|document|pune textiles/.test(t))return{intent:'ravi'};
+if(/claim|theft|intake|fnol|triage/.test(t))return{intent:'kabir'};
+return{intent:'other'};}
+
+var SYS_ROUTE='You are the dispatcher on an insurance broker’s operations floor in Pune. '
++'Five agents work here: asha (renewals), meera (reconciliation), nila (renewal notices and wordings), '
++'ravi (document extraction), kabir (claims intake). There is also a bulk job: queue (work the whole renewal queue). '
++'Read the request and reply with JSON only: {"intent":"queue|asha|meera|nila|ravi|kabir|other","reply":"one short sentence"}. '
++'The reply is spoken by the dispatcher, plain and specific, under 24 words, no exclamation marks, no invented facts.';
+
+async function cmdSend(){
+if(CMDBUSY)return;
+var t=($('cmdIn').value||'').trim();if(!t)return;
+$('cmdIn').value='';CMDBUSY=true;$('cmdGo').disabled=true;
+cmdLine('You',t.replace(/</g,'&lt;'),true);
+var hit=routeLocal(t),reply=null;
+if(cfg.live){var res=await callLLM(SYS_ROUTE,t,true);
+ if(res.raw){var j=parseJson(res.raw);if(j&&j.intent){hit={intent:String(j.intent).toLowerCase()};reply=j.reply||null;}}
+ $('cmdMode').textContent=res.raw?('live · '+res.model):res.model;}
+else{$('cmdMode').textContent='scripted';}
+CMDBUSY=false;$('cmdGo').disabled=false;
+if(hit.intent==='queue')return runQueue(reply);
+var a=AGENTS[hit.intent];
+if(a){cmdLine(a.n,(reply?reply+'<br><br>':'')+a.say,false,a.c);
+ var el=$(a.card);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+ el.style.outline='2px solid var(--text-accent)';setTimeout(function(){el.style.outline='';},2200);}
+ cmdChips(['Work the renewal queue','What stopped today?']);return;}
+cmdLine('Dispatcher',reply||'I can work the renewal queue, or hand you to Asha, Meera, Nila, Ravi or Kabir. Which of those?',false,'#9a9890');
+cmdChips(['Work the renewal queue','Help Asha','What stopped today?']);}
+
+var MAKES=['Maruti Swift VXi','Hyundai i20 Sportz','Tata Nexon XM','Honda City SV','Mahindra XUV300 W6','Maruti Baleno Zeta','Kia Sonet HTK','Tata Tiago XT','Hyundai Creta EX','Toyota Glanza G'];
+var RTO=['MH 12','MH 14','MH 01','MH 31','MH 20','MH 04'];
+
+async function runQueue(reply){
+cmdLine('Asha',(reply?reply+'<br><br>':'')+'Starting. One hundred renewals, earliest expiring in nine days. I read each schedule, check it against the wording in force on its own date, and stop on anything I cannot ground.',false,'#6c63d2');
+var bar=cmdLine('Asha','░░░░░░░░░░░░ 0 / 100',false,'#6c63d2');
+var body=bar.querySelector('div');
+var i=0,bound=0,rev=0,stop=0,seed=4471;
+function rnd(n){seed=(seed*1103515245+12345)&0x7fffffff;return seed%n;}
+var qh=hash('queue'+S.prevHash);
+tlEntry(nowT(),'Asha','#6c63d2','Renewals','I started the renewal queue: '+chip('100 schedules')+' , ordered by expiry.',workText('svc-asha · BrokerSoft read-only','batch · rules-engine v2.3','each case checked against wording in force on its own date',qh));S.prevHash=qh;
+var iv=setInterval(function(){
+ if(i>=100){clearInterval(iv);return doneQueue(bound,rev,stop);}
+ i++;
+ var stops=(i===8||i===35||i===62),revw=(i%13===0&&!stops);
+ if(stops)stop++;else if(revw)rev++;else bound++;
+ var f=Math.round(i/100*12),fill='';
+ for(var k=0;k<12;k++)fill+=(k<f?'▓':'░');
+ body.innerHTML='<b style="display:block;font-size:12px;color:var(--text-secondary);font-weight:500;margin-bottom:2px">Asha</b>'
+  +'<span style="font-family:var(--font-mono);font-size:13px">'+fill+' '+i+' / 100</span>'
+  +'<br><span style="font-size:12.5px;color:var(--text-secondary)">'+bound+' bound · '+rev+' awaiting approval · '+stop+' stopped</span>';
+ if(i%9===0||stops){
+  var reg=RTO[rnd(RTO.length)]+' '+String.fromCharCode(65+rnd(26))+String.fromCharCode(65+rnd(26))+' '+(1000+rnd(8999));
+  feed('Asha',(stops?'Stopped on ':'Bound ')+reg+' · '+MAKES[rnd(MAKES.length)]+(stops?' — a required field is not in the document.':'.'));}
+},70);}
+
+function doneQueue(bound,rev,stop){
+cmdLine('Asha','<b>One hundred done.</b> '+bound+' bound and filed, '+rev+' want an approval because the premium moved more than fifteen per cent, and '+stop+' I had to stop on.',false,'#6c63d2');
+var dh=hash('qdone'+S.prevHash);
+tlEntry(nowT(),'Asha','#6c63d2','Renewals','Queue finished: '+chip(bound+' bound')+' , '+chip(rev+' awaiting approval')+' , '+chip(stop+' stopped')+' . Nothing was defaulted.',workText('svc-asha · BrokerSoft read-only','batch complete','every stop recorded with its reason',dh));S.prevHash=dh;
+setTimeout(function(){
+ cmdLine('Asha','The one I would look at first is <b>Kolhapur Agro Foods</b>, REN-2026-04417 — it expires in nine days and BrokerSoft has no prior-year claim record. I have not assumed it was zero. My card is below.',false,'#6c63d2');
+ var el=$('btnA');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+ el.style.outline='2px solid var(--text-accent)';setTimeout(function(){el.style.outline='';},2600);}
+ cmdChips(['Help Asha','What stopped today?','Help Meera']);},1100);}
+
+$('cmdGo').addEventListener('click',cmdSend);
+$('cmdIn').addEventListener('keydown',function(e){if(e.key==='Enter')cmdSend();});
+cmdLine('Asha','Morning. There are a hundred renewals in the queue, the earliest expiring in nine days. Three of us are already stuck on something and waiting on you.',false,'#6c63d2');
+cmdChips(['Work the renewal queue','Help Asha','What stopped today?']);
+if(cfg.live)$('cmdMode').textContent='live · '+cfg.model;
 </script></div></body></html>
