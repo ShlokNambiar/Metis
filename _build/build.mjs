@@ -33,7 +33,7 @@ const NOTES = [
       "India's DPDP framework permits cross-border transfer unless a country is restricted — and none is. What that means for teams building AI products.",
     dateISO: "2026-08-16",
     dateHuman: "16 August 2026",
-    modifiedISO: "2026-10-15",
+    modifiedISO: "2026-10-26",
     status: { label: "Full compliance 13 May 2027", kind: "due" },
     kicker: "DPDP",
     related: [
@@ -53,24 +53,8 @@ const NOTES = [
     status: { label: "In force since 15 Feb 2026", kind: "live" },
     kicker: "TCCCPR",
     related: [
-      { href: "/services/detailed/#agentic-systems", label: "Agentic Systems: the voice and conversational agents we build" },
-      { href: "/faq/#voice", label: "FAQ: AI voice and calling" },
-    ],
-  },
-  {
-    slug: "questions-before-buying-ai-calling-india",
-    h1: "Ten questions to ask before buying an AI calling agent in India",
-    title: "METIS | 10 questions before buying an AI calling agent",
-    description:
-      "The questions that separate an AI voice system which survives real customers from one that does not — number series, interruptions, fallbacks and handoff.",
-    dateISO: "2026-08-16",
-    dateHuman: "16 August 2026",
-    modifiedISO: "2026-10-26",
-    status: { label: "Buyer's guide", kind: "" },
-    kicker: "Buying",
-    related: [
-      { href: "/services/detailed/#agentic-systems", label: "Agentic Systems: the voice and conversational agents we build" },
-      { href: "/faq/#voice", label: "FAQ: AI voice and calling" },
+      { href: "/services/detailed/#agentic-systems", label: "Agentic Systems: the AI agents we build" },
+      { href: "/faq/#data", label: "FAQ: data and compliance" },
     ],
   },
 ];
@@ -284,7 +268,7 @@ const indexMain = `<main id="metis-main" class="metis-article" style="max-width:
   <div class="metis-article-head">
     <p class="metis-eyebrow" style="margin: 0;">Writing from METIS</p>
     <h1>Notes</h1>
-    <p style="font-family: var(--font-sans); font-size: var(--fs-lead); line-height: 1.55; color: var(--text-muted); margin: 0 0 8px; max-width: 54ch;">Practical answers on AI voice agents, customer data and what the rules in India actually say &mdash; written by the team running this in production.</p>
+    <p style="font-family: var(--font-sans); font-size: var(--fs-lead); line-height: 1.55; color: var(--text-muted); margin: 0 0 8px; max-width: 54ch;">Practical writing on building AI products, customer data and what the rules in India actually say &mdash; from a team that ships AI to production.</p>
   </div>
   <div class="metis-cards">
 ${cards}
@@ -332,10 +316,10 @@ console.log("\nIndex:");
 emit(
   "blog/index.html",
   render({
-    title: "METIS | Notes on AI, compliance and voice agents in India",
-    ogTitle: "METIS | Notes on AI, compliance and voice agents in India",
+    title: "METIS | Notes on building AI, data and compliance in India",
+    ogTitle: "METIS | Notes on building AI, data and compliance in India",
     description:
-      "Practical writing on AI voice agents, India's DPDP and TCCCPR rules, and what building this actually involves — from a team running it in production.",
+      "Practical writing on building AI products in India — DPDP, customer data, regulation and what shipping AI to production actually involves.",
     canonical: `${SITE}/blog/`,
     ogType: "website",
     jsonld: [
@@ -344,7 +328,7 @@ emit(
         "@type": "Blog",
         "@id": `${SITE}/blog/#blog`,
         name: "Notes",
-        description: "Writing on AI voice agents, compliance and product work in India.",
+        description: "Writing on building AI products, data and compliance in India.",
         url: `${SITE}/blog/`,
         inLanguage: "en-IN",
         publisher: ORG,
@@ -440,10 +424,10 @@ console.log("\nFAQ:");
 emit(
   "faq/index.html",
   render({
-    title: "METIS | FAQ on AI voice agents and India's rules",
-    ogTitle: "METIS | FAQ on AI voice agents and India's rules",
+    title: "METIS | FAQ: working with an AI product studio",
+    ogTitle: "METIS | FAQ: working with an AI product studio",
     description:
-      "Straight answers on how METIS works, what AI voice agents can realistically do, where your customer data goes, and what India's rules require.",
+      "Straight answers on how METIS works as an AI product studio and consultancy: engagements, cost, timelines, where your data goes, and what India's rules require.",
     canonical: `${SITE}/faq/`,
     ogType: "website",
     jsonld: [
@@ -517,16 +501,16 @@ emit(
 // lastmod = the date each page's published HTML last changed (git log -1 of the
 // output file). Every indexable page changed on 2026-10-15 (SEO/AEO pass: GA4,
 // footer + internal links, JSON-LD). Bump the matching entry when a page changes.
-const SEO_PASS = "2026-10-15";
+const SEO_PASS = "2026-10-26";
 const urls = [
   { loc: `${SITE}/`, mod: SEO_PASS },
   { loc: `${SITE}/services/`, mod: SEO_PASS },
   { loc: `${SITE}/services/detailed/`, mod: SEO_PASS },
   { loc: `${SITE}/about/`, mod: SEO_PASS },
-  { loc: `${SITE}/contact/`, mod: SEO_PASS },
+  { loc: `${SITE}/contact/`, mod: "2026-10-15" },
   { loc: `${SITE}/faq/`, mod: SEO_PASS },
   { loc: `${SITE}/blog/`, mod: SEO_PASS },
-  { loc: `${SITE}/privacy/`, mod: SEO_PASS },
+  { loc: `${SITE}/privacy/`, mod: "2026-10-15" },
   ...built.map((n) => ({ loc: n.url, mod: n.lastmod || n.modifiedISO || SEO_PASS })),
 ];
 
