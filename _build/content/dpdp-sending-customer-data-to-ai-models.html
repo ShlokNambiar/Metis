@@ -1,0 +1,132 @@
+<div class="metis-answer">
+  <span class="metis-answer-k">Short answer</span>
+  <p>Yes. India's DPDP framework permits transfer of personal data to any country the government has not specifically restricted — and as of mid-2026 no country has been restricted. The obligations that bite are consent, notice and retention, not geography.</p>
+</div>
+
+<p class="metis-lede">This is the question we are asked most often, usually with the assumption baked in that the answer is no. It is the opposite of the European rule, and almost everyone gets it backwards.</p>
+
+<h2>Why everyone assumes it is banned</h2>
+
+<p>Most people's mental model of data protection comes from GDPR, where cross-border transfer is <em>prohibited by default</em>. You need an adequacy decision for the destination country, or standard contractual clauses, or one of a short list of derogations. The burden sits on you to justify the transfer.</p>
+
+<p>India built the opposite mechanism.</p>
+
+<div class="metis-table-wrap">
+  <table>
+    <thead>
+      <tr><th scope="col">&nbsp;</th><th scope="col">GDPR (EU)</th><th scope="col">DPDP (India)</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Default position</th><td>Transfer prohibited</td><td>Transfer permitted</td></tr>
+      <tr><th scope="row">Mechanism</th><td>Allowlist — adequacy decisions</td><td><strong>Blocklist</strong> — restricted countries only</td></tr>
+      <tr><th scope="row">Who carries the burden</th><td>You justify each transfer</td><td>Government must restrict a country</td></tr>
+      <tr><th scope="row">Countries currently restricted</th><td>Most of the world lacks adequacy</td><td><strong>None notified to date</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Under Section 16 of the DPDP Act, personal data may flow to any country except those the Central Government specifically restricts. As of mid-2026 the government has issued no such notification. There is, at present, no jurisdiction you are barred from sending personal data to.</p>
+
+<h2>The catch worth understanding</h2>
+
+<p>The permission is real. It is also <em>revocable without warning</em>.</p>
+
+<p>The government is under no obligation to publish reasons for restricting a country, and the Act provides no alternative transfer mechanism to fall back on — there is no Indian equivalent of standard contractual clauses to keep a flow alive after a restriction lands.</p>
+
+<div class="metis-callout">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--metis-rust)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+  <p>Design so the model provider can be swapped without re-architecting. Not because a restriction is likely — because if one arrives, there is no legal workaround, only a migration.</p>
+</div>
+
+<p>In practice that means an abstraction layer between your application and whichever model you call, and not writing provider-specific behaviour deep into your business logic. This is good engineering regardless. It happens to also be your only available hedge.</p>
+
+<h2>What does apply to you</h2>
+
+<p>Geography is the easy part. These are the obligations that actually take work.</p>
+
+<h3>A contract with your processor</h3>
+<p>A Data Fiduciary may transfer personal data to another Data Fiduciary or to a Data Processor only under a valid contract. If you are calling a model API with customer data in the payload, that provider is your processor, and the commercial terms you clicked through need to cover it.</p>
+
+<h3>Consent and notice</h3>
+<p>Consent must be free, specific, informed, unconditional and unambiguous, gathered through a clear affirmative action, with notice given in plain language. "We may use your data to improve our services" does not describe sending a customer's policy details to a third-party model.</p>
+
+<h3>Retention and deletion</h3>
+<p>Personal data must not be kept past the purpose it was collected for. Conversation logs, call recordings and transcripts are the ones teams forget — they accumulate silently, and they are exactly the artefacts an AI feature generates most of.</p>
+
+<h3>Breach notification within 72 hours</h3>
+<p>The Data Protection Board and affected individuals must be notified of a personal data breach. Failure to notify carries a penalty of up to ₹200 crore.</p>
+
+<h3>Children's data</h3>
+<p>Processing a child's personal data requires verifiable parental consent. Verification can rely on information already held, details supplied by the parent, or virtual tokens issued by authorised entities or DigiLocker providers. Non-compliance with the children's provisions carries up to <strong>₹200 crore</strong>.</p>
+
+<p>If your product is consumer-facing and you have not built an age gate, this is the sharpest edge in the entire framework.</p>
+
+<h2>There is no special AI clause</h2>
+
+<p>Worth stating plainly, because it comes up in every conversation: <strong>the DPDP framework contains no AI-specific provisions.</strong> There is no separate regime for machine learning, no carve-out for model training, no additional consent category for automated processing.</p>
+
+<p>Sending personal data to a language model is processing. It is governed by the same rules as putting that data in a spreadsheet, a CRM, or an offshore BPO. The novelty is in your architecture, not in the law.</p>
+
+<p>This cuts both ways. There is no extra hurdle to clear — and no exemption to hide behind.</p>
+
+<h2>When does DPDP compliance become mandatory?</h2>
+
+<p>The DPDP Rules were notified on <strong>13 November 2025</strong>, alongside the constitution of the Data Protection Board of India. Implementation is phased across eighteen months.</p>
+
+<div class="metis-table-wrap">
+  <table>
+    <thead>
+      <tr><th scope="col">Date</th><th scope="col">What comes into force</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>13 Nov 2025</strong></td><td>Rules 1, 2 and 17–21. Definitions and procedural framework. Data Protection Board constituted. Complaints can be filed.</td></tr>
+      <tr><td><strong>13 Nov 2026</strong></td><td>Rule 4. Consent Manager registration opens — a regulated Indian entity with ₹2 crore minimum net worth acting as a single interface for managing consent.</td></tr>
+      <tr><td><strong>13 May 2027</strong></td><td>Rules 3, 5–16, 22 and 23. <strong>Full substantive compliance.</strong> Notice and consent standards, data principal rights, security safeguards, breach reporting, retention and deletion, children's data, cross-border conditions.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Be careful with how this gets sold to you. A large compliance industry has grown around quoting the ₹250 crore ceiling next to whichever date is nearest. The honest position is that <strong>full substantive obligations land on 13 May 2027</strong>, and the November 2026 milestone is principally the Consent Manager framework.</p>
+
+<p>That is not a reason to wait. Consent architecture, retention policy and breach process are slow to build and slower to retrofit, and they touch every product surface you have. But you are not late, and anyone telling you otherwise is selling something.</p>
+
+<h2>Penalties, for scale</h2>
+
+<ul>
+  <li><strong>₹250 crore</strong> — failure to implement reasonable security safeguards</li>
+  <li><strong>₹200 crore</strong> — failure to notify the Board or affected individuals of a breach</li>
+  <li><strong>₹200 crore</strong> — non-compliance with the children's data provisions</li>
+</ul>
+
+<p>Penalties are assessed per violation, per inquiry. A single investigation that finds a security failure alongside a missed notification and a consent defect can attract separate penalties for each.</p>
+
+<h2>A practical position</h2>
+
+<ol>
+  <li><strong>Use the model you think is best.</strong> No jurisdiction is currently restricted, and choosing a weaker model for imagined legal reasons costs you real quality today against a hypothetical.</li>
+  <li><strong>Keep provider choice swappable.</strong> One abstraction layer. It is the only hedge available if a restriction ever lands.</li>
+  <li><strong>Check your processor terms.</strong> Confirm your data is not used for training, and that the contract covers processing on your behalf.</li>
+  <li><strong>Write the retention policy now.</strong> Especially for transcripts, recordings and conversation logs.</li>
+  <li><strong>Fix consent and notice at the point of collection.</strong> This is the slow one. Start it early.</li>
+  <li><strong>Build an age gate if you are consumer-facing.</strong> ₹200 crore, and no ambiguity in the drafting.</li>
+</ol>
+
+<div class="metis-faq">
+  <h2>Common questions</h2>
+  <details><summary>Can Indian companies send personal data to OpenAI, Anthropic or Google?</summary><p>Yes. The DPDP Act permits transfer of personal data to any country the Central Government has not specifically restricted under Section 16. As of mid-2026 no country has been notified as restricted, so there is no jurisdictional bar on using these providers. A valid contract with the provider as your processor is still required.</p></details>
+  <details><summary>Does the DPDP Act require data localisation?</summary><p>Not generally. The Act uses a blocklist model rather than a localisation mandate. Significant Data Fiduciaries face additional restrictions on transferring categories of data the government specifies, but there is no blanket requirement to keep personal data inside India.</p></details>
+  <details><summary>How is DPDP different from GDPR on cross-border transfers?</summary><p>They are inverted. GDPR prohibits transfers by default and requires an adequacy decision or safeguards such as standard contractual clauses. DPDP permits transfers by default and restricts only countries the government specifically notifies. India has notified none to date.</p></details>
+  <details><summary>When does DPDP compliance actually become mandatory?</summary><p>Implementation is phased. The Rules were notified on 13 November 2025. Consent Manager provisions take effect 13 November 2026. Full substantive compliance — notice, consent, security safeguards, breach reporting, retention, children's data and cross-border conditions — takes effect 13 May 2027.</p></details>
+  <details><summary>Are there special DPDP rules for AI or machine learning?</summary><p>No. The framework contains no AI-specific provisions. Sending personal data to a language model is processing, governed by the same consent, notice, retention and security obligations as any other processing.</p></details>
+  <details><summary>What is the maximum penalty under the DPDP Act?</summary><p>Up to ₹250 crore for failure to implement reasonable security safeguards. Failure to notify a breach and non-compliance with children's data provisions each carry up to ₹200 crore. Penalties are assessed per violation, so a single inquiry can produce cumulative fines.</p></details>
+  <details><summary>Do we need consent to record and transcribe customer calls?</summary><p>Call recordings and transcripts are personal data. They require a lawful basis, notice in plain language describing the purpose, and a retention period tied to that purpose. Recordings are the artefact teams most often accumulate without a deletion schedule.</p></details>
+</div>
+
+<h2>Sources</h2>
+<ul class="metis-sources">
+  <li>Digital Personal Data Protection Act, 2023 — Section 16, transfer of personal data outside India</li>
+  <li>Digital Personal Data Protection Rules, 2025 — notified 13 November 2025; Rule 15, transfer of personal data outside India</li>
+  <li><a href="https://www.meity.gov.in/" rel="noopener">Ministry of Electronics and Information Technology</a> — notifications of 13 November 2025 constituting the Data Protection Board of India</li>
+</ul>
+
+<p class="metis-verified">Facts verified 16 August 2026. This is a plain-English summary for product and engineering teams, not legal advice. The cross-border position depends on the government not having restricted a destination country; confirm the current position and your specific obligations with counsel before relying on it.</p>

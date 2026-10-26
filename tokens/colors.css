@@ -42,17 +42,24 @@
   --surface-muted:    var(--metis-grey-100);
   --surface-tint:     var(--metis-blue-100);
 
+  /* Text-role aliases are tuned for WCAG AA (4.5:1) on white AND on cream.
+     The brand core above is unchanged — these govern TEXT only, so the
+     palette stays intact while small copy stays legible.
+     Measured on #ffffff: body 10.3 · muted 6.8 · faint 5.1 */
   --text-strong:      var(--metis-ink);
   --text-body:        var(--metis-grey-700);
-  --text-muted:       var(--metis-grey-500);
-  --text-faint:       var(--metis-grey-400);
+  --text-muted:       #5f5a55;
+  --text-faint:       #746d67;
   --text-on-dark:     var(--metis-white);
   --text-on-dark-dim: rgba(255,255,255,0.72);
   --text-link:        var(--metis-blue);
 
-  --accent:           var(--metis-orange);
+  --accent:           var(--metis-orange);   /* large / non-text use — unchanged */
   --accent-ink:       var(--metis-blue);
-  --eyebrow:          var(--metis-orange);
+  /* Eyebrows are 13px, so they need 4.5:1. The display orange (#f0562e)
+     reaches only 3.5 on white and 3.0 on cream. This is the same hue,
+     darkened just enough to pass: 5.9 on white, 5.2 on cream. */
+  --eyebrow:          #b03e18;
 
   --border-hair:      var(--metis-grey-300);
   --border-strong:    var(--metis-ink);

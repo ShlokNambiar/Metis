@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PP39SYRMGY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PP39SYRMGY');
+</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex" />
-<title>Notes | METIS — Writing on AI, WhatsApp and voice agents in India</title>
-<meta name="description" content="Field notes from METIS — practical writing on AI voice agents, WhatsApp Business calling, TRAI compliance and what this actually costs in India." />
+<title>METIS | Notes on AI, compliance and voice agents in India</title>
+<meta name="description" content="Practical writing on AI voice agents, India's DPDP and TCCCPR rules, and what building this actually involves — from a team running it in production." />
 <link rel="canonical" href="https://metisai.in/blog/" />
 <meta property="og:site_name" content="METIS" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Notes | METIS" />
-<meta property="og:description" content="Practical writing on AI voice agents, WhatsApp calling and TRAI compliance in India." />
-<meta property="og:url" content="https://metisai.in/blog//" />
+<meta property="og:title" content="METIS | Notes on AI, compliance and voice agents in India" />
+<meta property="og:description" content="Practical writing on AI voice agents, India's DPDP and TCCCPR rules, and what building this actually involves — from a team running it in production." />
+<meta property="og:url" content="https://metisai.in/blog/" />
 <meta property="og:image" content="https://metisai.in/icons/og-card.png" />
+<meta property="og:locale" content="en_IN" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Notes | METIS" />
-<meta name="twitter:description" content="Practical writing on AI voice agents, WhatsApp calling and TRAI compliance in India." />
+<meta name="twitter:title" content="METIS | Notes on AI, compliance and voice agents in India" />
+<meta name="twitter:description" content="Practical writing on AI voice agents, India's DPDP and TCCCPR rules, and what building this actually involves — from a team running it in production." />
 <meta name="twitter:image" content="https://metisai.in/icons/og-card.png" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","@id":"https://metisai.in/blog/#blog","name":"Notes","description":"Writing on AI voice agents, compliance and product work in India.","url":"https://metisai.in/blog/","inLanguage":"en-IN","publisher":{"@type":"Organization","name":"METIS","url":"https://metisai.in/","logo":{"@type":"ImageObject","url":"https://metisai.in/icons/metis-logo-512.png"}},"blogPost":[{"@type":"BlogPosting","headline":"Can you send Indian customer data to OpenAI or Claude?","description":"India's DPDP framework permits cross-border transfer unless a country is restricted — and none is. What that means for teams building AI products.","datePublished":"2026-08-16","url":"https://metisai.in/blog/dpdp-sending-customer-data-to-ai-models/"},{"@type":"BlogPosting","headline":"140 or 1600: which number series must insurance calls use?","description":"Insurers had to move service calls to TRAI's 1600 series by 15 February 2026. Which series applies to renewals, and why 1600 lifts connect rates.","datePublished":"2026-08-16","url":"https://metisai.in/blog/trai-140-1600-series-insurance-calls/"},{"@type":"BlogPosting","headline":"Ten questions to ask before buying an AI calling agent in India","description":"The questions that separate an AI voice system which survives real customers from one that does not — number series, interruptions, fallbacks and handoff.","datePublished":"2026-08-16","url":"https://metisai.in/blog/questions-before-buying-ai-calling-india/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://metisai.in/"},{"@type":"ListItem","position":2,"name":"Notes","item":"https://metisai.in/blog/"}]}</script>
 <script>
   try { document.documentElement.dataset.theme = localStorage.getItem("metis-theme") === "dark" ? "dark" : ""; } catch (e) {}
 </script>
@@ -26,6 +37,12 @@
   body { margin: 0; background: var(--metis-white); transition: background .3s ease; }
   [data-theme="dark"] {
     color-scheme: dark;
+    /* The #1c46ff brand blue reaches only 2.98:1 on the dark ground, and the
+       display orange fails too. Both are lifted here for dark mode only —
+       measured on #14130f: blue 7.9, orange 8.0. Light mode is untouched. */
+    --metis-blue:       #8da5ff;
+    --metis-orange:     #ff8a5c;
+    --eyebrow:          #ff8a5c;
     --metis-white:      #14130f;
     --metis-cream:      #1b1914;
     --metis-cream-deep: #211e17;
@@ -50,9 +67,15 @@
     background-repeat:repeat-x; background-position:left center; background-size:auto 100%; }
   .metis-nav-link:hover .metis-nav-f { width:100%; }
   .metis-logo-link:hover .metis-logo-draw { stroke-dashoffset: 0 !important; }
+  :where(a, button, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--focus-ring); outline-offset: 3px; border-radius: 4px;
+  }
   @media (max-width: 860px) {
     .metis-nav-desktop, .metis-nav-cta { display: none !important; }
     .metis-nav-burger { display: inline-flex !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   }
 </style>
 <style data-metis="button">
@@ -86,10 +109,17 @@
     letter-spacing: -0.025em; color: var(--text-strong); margin: 18px 0 18px;
   }
   .metis-article-byline {
-    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
     font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-faint);
     padding-bottom: 28px; border-bottom: 1px solid var(--border-hair); margin-bottom: 36px;
+    overflow: hidden;
   }
+  /* Separator dots sit in each item's left padding; the one that lands at the
+     start of a wrapped line falls outside the byline box and is clipped, so a
+     line never starts or ends on a stray dot. */
+  .metis-byline-items { display: flex; flex-wrap: wrap; row-gap: 8px; align-items: center; margin-left: -28px; }
+  .metis-bi { position: relative; padding-left: 28px; }
+  .metis-bi::before { content: "\00b7"; position: absolute; left: 0; width: 28px; text-align: center; }
+  .metis-bi--nodot::before { content: none; }
   .metis-article-byline b { color: var(--text-muted); font-weight: 600; }
   .metis-article-body { font-family: var(--font-sans); color: var(--text-body); font-size: 1.0625rem; line-height: 1.65; }
   .metis-article-body p { margin: 0 0 1.25em; }
@@ -134,6 +164,7 @@
     cursor: pointer; font-weight: 600; color: var(--text-strong); font-size: var(--fs-body);
     list-style: none; display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
   }
+  .metis-article-body .metis-faq summary::-webkit-details-marker { display: none; }
   .metis-article-body .metis-faq summary::after { content: "+"; color: var(--metis-blue); font-weight: 500; }
   .metis-article-body .metis-faq details[open] summary::after { content: "\2212"; }
   .metis-article-body .metis-faq details p { margin: 0.8em 0 0; }
@@ -142,58 +173,162 @@
     border-radius: var(--radius-xl); text-align: left;
   }
   .metis-article-cta .metis-serif { font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.25; color: var(--text-strong); margin: 0 0 18px; }
+  .metis-related { margin: 3em 0 0; padding-top: 1.6em; border-top: 1px solid var(--border-hair); }
+  .metis-related h2 { margin: 0 0 0.7em; font-size: 1.15rem; }
+  .metis-related ul { margin: 0; }
   .metis-article-footer-space { padding-bottom: clamp(48px, 8vh, 96px); }
+
+  /* ---- Answer box: the direct answer AI engines lift. Serif marks it as the answer. ---- */
+  .metis-answer {
+    margin: 0 0 2.2em; padding: 22px 26px; border-radius: var(--radius-lg);
+    background: var(--metis-cream); border-left: 3px solid var(--metis-blue);
+  }
+  .metis-answer .metis-answer-k {
+    display: block; font-family: var(--font-mono); font-size: 0.6875rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--metis-blue);
+    margin: 0 0 10px;
+  }
+  .metis-answer p {
+    margin: 0; font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.4;
+    color: var(--text-strong);
+  }
+
+  /* ---- Regulatory status tag: mono, because it is data, not decoration ---- */
+  .metis-status {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 5px 11px; border-radius: var(--radius-pill);
+    border: 1px solid var(--border-hair); color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .metis-status::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--metis-grey-400); flex: none;
+  }
+  /* --eyebrow, not --metis-orange: the display orange is 3.5:1 on white and
+     this is 11px text. The alias is the AA-safe member of the same hue. */
+  .metis-status--live::before  { background: var(--eyebrow); }
+  .metis-status--live          { color: var(--eyebrow); border-color: var(--eyebrow); }
+  .metis-status--due::before   { background: var(--metis-blue); }
+  .metis-status--due           { color: var(--metis-blue); border-color: var(--metis-blue); }
+
+  .metis-verified {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-faint);
+    margin: 2.5em 0 0; padding-top: 18px; border-top: 1px solid var(--border-hair);
+  }
+  .metis-sources { font-size: var(--fs-sm); color: var(--text-muted); }
+  .metis-sources li { margin-bottom: 0.35em; }
+</style>
+<style data-metis="cards">
+  .metis-cards { border-top: 1px solid var(--border-hair); margin-top: 30px; }
+  .metis-card {
+    display: block; text-decoration: none; padding: 30px 0;
+    border-bottom: 1px solid var(--border-hair);
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .metis-card:hover { opacity: .72; }
+  .metis-card:hover h2 { color: var(--metis-blue); }
+  .metis-card-meta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+    font-family: var(--font-sans); font-size: var(--fs-sm);
+    color: var(--text-faint); margin: 0 0 12px;
+  }
+  .metis-card h2 {
+    font-family: var(--font-sans); font-weight: 600; font-size: 1.5rem;
+    letter-spacing: -0.022em; line-height: 1.18; color: var(--text-strong);
+    margin: 0 0 10px; transition: color var(--dur-base) var(--ease-out);
+  }
+  .metis-card p {
+    font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.55;
+    color: var(--text-muted); margin: 0; max-width: 64ch;
+  }
+  .metis-notes-more {
+    font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.6;
+    color: var(--text-muted); margin: 30px 0 0;
+  }
+  .metis-notes-more a { color: var(--metis-blue); text-decoration: none; font-weight: 500; }
+  .metis-notes-more a:hover { text-decoration: underline; }
+  .metis-card-go {
+    display: inline-block; margin-top: 15px; font-family: var(--font-sans);
+    font-size: var(--fs-sm); font-weight: 600; color: var(--metis-blue);
+  }
 </style>
 </head>
 <body>
+<a href="#metis-main" style="position:absolute;left:-9999px;top:0;padding:10px 16px;background:var(--metis-ink);color:#fff;font-family:var(--font-sans);font-size:14px;z-index:100;border-radius:0 0 8px 0;" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
 <header style="position: sticky; top: 0px; z-index: 50; background: var(--metis-white);">
   <div class="metis-container" style="display: flex; align-items: center; justify-content: space-between; height: 78px; max-width: 1200px; margin-inline: auto;">
-    <a href="/" class="metis-logo-link" style="display: flex; align-items: center; text-decoration: none;">
+    <a href="/" class="metis-logo-link" aria-label="METIS home" style="display: flex; align-items: center; text-decoration: none;">
       <span style="display: inline-flex; align-items: center; gap: 12.92px;">
-        <svg width="38" height="38" viewBox="0 0 100 100" fill="none" style="display: block;"><g stroke="var(--metis-blue)" stroke-width="6.5" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="20"></line><line x1="50" y1="50" x2="79" y2="41"></line><line x1="50" y1="50" x2="70" y2="78"></line><line x1="50" y1="50" x2="26" y2="70"></line></g><g fill="var(--metis-blue)"><circle cx="50" cy="20" r="8"></circle><circle cx="79" cy="41" r="8"></circle><circle cx="70" cy="78" r="8"></circle><circle cx="26" cy="70" r="8"></circle><circle cx="50" cy="50" r="10.5"></circle></g></svg>
+        <svg width="38" height="38" viewBox="0 0 100 100" fill="none" aria-hidden="true" style="display: block;"><g stroke="var(--metis-blue)" stroke-width="6.5" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="20"></line><line x1="50" y1="50" x2="79" y2="41"></line><line x1="50" y1="50" x2="70" y2="78"></line><line x1="50" y1="50" x2="26" y2="70"></line></g><g fill="var(--metis-blue)"><circle cx="50" cy="20" r="8"></circle><circle cx="79" cy="41" r="8"></circle><circle cx="70" cy="78" r="8"></circle><circle cx="26" cy="70" r="8"></circle><circle cx="50" cy="50" r="10.5"></circle></g></svg>
         <span style="position: relative; font-family: var(--font-sans); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 22.8px; color: var(--text-strong); line-height: 1;">Metis<svg class="metis-logo-draw-svg" viewBox="0 0 128 6" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 0px; width: 100%; height: 0.4em; bottom: -0.42em; overflow: visible; pointer-events: none;"><path class="metis-logo-draw" pathLength="100" d="M0 4 C 3 0.5,5 0.5,8 3 S 13 5.5,16 2 S 21 0.5,24 3 S 29 5.5,32 2 S 37 0.5,40 3 S 45 5.5,48 2 S 53 0.5,56 3 S 61 5.5,64 2 S 69 0.5,72 3 S 77 5.5,80 2 S 85 0.5,88 3 S 93 5.5,96 2 S 101 0.5,104 3 S 109 5.5,112 2 S 117 0.5,120 3 S 125 5.5,128 2" fill="none" stroke="#1c46ff" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke" style="stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset .5s var(--ease-out);"></path></svg></span>
       </span>
     </a>
-    <nav class="metis-nav-desktop" style="display: flex; align-items: center; gap: 34px;">
+    <nav class="metis-nav-desktop" aria-label="Primary" style="display: flex; align-items: center; gap: 30px;">
       <a href="/services/" class="metis-nav-link" style="display: flex; align-items: center; gap: 5px; color: var(--text-strong); font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-sm); text-decoration: none;"><span style="position: relative; display: inline-block;">Services<span class="metis-nav-u" aria-hidden="true"><span class="metis-nav-f"></span></span></span></a>
       <a href="/about/" class="metis-nav-link" style="display: flex; align-items: center; gap: 5px; color: var(--text-strong); font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-sm); text-decoration: none;"><span style="position: relative; display: inline-block;">About us<span class="metis-nav-u" aria-hidden="true"><span class="metis-nav-f"></span></span></span></a>
       <a href="/blog/" class="metis-nav-link" style="display: flex; align-items: center; gap: 5px; color: var(--text-strong); font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-sm); text-decoration: none;"><span style="position: relative; display: inline-block;">Notes<span class="metis-nav-u" aria-hidden="true"><span class="metis-nav-f"></span></span></span></a>
+      <a href="/faq/" class="metis-nav-link" style="display: flex; align-items: center; gap: 5px; color: var(--text-strong); font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-sm); text-decoration: none;"><span style="position: relative; display: inline-block;">FAQ<span class="metis-nav-u" aria-hidden="true"><span class="metis-nav-f"></span></span></span></a>
       <a href="/contact/" class="metis-nav-link" style="display: flex; align-items: center; gap: 5px; color: var(--text-strong); font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-sm); text-decoration: none;"><span style="position: relative; display: inline-block;">Contact us<span class="metis-nav-u" aria-hidden="true"><span class="metis-nav-f"></span></span></span></a>
     </nav>
     <div style="display: flex; align-items: center; gap: 12px;">
-      <button id="metis-theme-toggle" aria-label="Toggle theme" title="Toggle theme" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-pill); border: 1.5px solid var(--metis-grey-300); background: transparent; color: var(--text-strong); cursor: pointer; padding: 0px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg></button>
+      <button id="metis-theme-toggle" aria-label="Toggle theme" title="Toggle theme" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-pill); border: 1.5px solid var(--metis-grey-300); background: transparent; color: var(--text-strong); cursor: pointer; padding: 0px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg></button>
       <div class="metis-nav-cta"><a class="metis-btn metis-btn--primary metis-btn--sm" href="/contact/">Work With Us</a></div>
-      <button id="metis-burger" class="metis-nav-burger" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; padding: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-strong)" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
+      <button id="metis-burger" class="metis-nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="metis-mobile-menu" style="display: none; background: none; border: none; cursor: pointer; padding: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-strong)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
     </div>
   </div>
   <div id="metis-mobile-menu" style="display: none; border-top: 1px solid var(--border-hair); background: var(--metis-white); padding: 16px 24px 24px;">
-    <nav style="display: flex; flex-direction: column; gap: 16px; font-family: var(--font-sans); font-size: var(--fs-body); font-weight: 500;">
+    <nav aria-label="Mobile" style="display: flex; flex-direction: column; gap: 16px; font-family: var(--font-sans); font-size: var(--fs-body); font-weight: 500;">
       <a href="/services/" style="color: var(--text-strong); text-decoration: none;">Services</a>
       <a href="/about/" style="color: var(--text-strong); text-decoration: none;">About us</a>
       <a href="/blog/" style="color: var(--text-strong); text-decoration: none;">Notes</a>
+      <a href="/faq/" style="color: var(--text-strong); text-decoration: none;">FAQ</a>
       <a href="/contact/" style="color: var(--text-strong); text-decoration: none;">Contact us</a>
       <a class="metis-btn metis-btn--primary metis-btn--md" href="/contact/" style="align-self: flex-start;">Work With Us</a>
     </nav>
   </div>
 </header>
 
-<main class="metis-article" style="max-width: 840px;">
+<main id="metis-main" class="metis-article" style="max-width: 840px;">
   <div class="metis-article-head">
     <p class="metis-eyebrow" style="margin: 0;">Writing from METIS</p>
     <h1>Notes</h1>
-    <p style="font-family: var(--font-sans); font-size: var(--fs-lead); line-height: 1.55; color: var(--text-muted); margin: 0 0 8px; max-width: 52ch;">Practical answers on AI voice agents, WhatsApp Business calling, and what the rules and rates in India actually say &mdash; from a team running this in production.</p>
+    <p style="font-family: var(--font-sans); font-size: var(--fs-lead); line-height: 1.55; color: var(--text-muted); margin: 0 0 8px; max-width: 54ch;">Practical answers on AI voice agents, customer data and what the rules in India actually say &mdash; written by the team running this in production.</p>
   </div>
-  <div style="border-top: 1px solid var(--border-hair); margin-top: 28px;">
-    <!-- POSTS:INSERT — newest first. Card pattern:
-    <a href="/blog/SLUG/" style="display: block; text-decoration: none; padding: 28px 0; border-bottom: 1px solid var(--border-hair);">
-      <p style="font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-faint); margin: 0 0 8px;">DATE_HUMAN &middot; READ_MIN min read</p>
-      <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 1.45rem; letter-spacing: -0.02em; line-height: 1.2; color: var(--text-strong); margin: 0 0 10px;">TITLE</h2>
-      <p style="font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.55; color: var(--text-muted); margin: 0; max-width: 62ch;">DESCRIPTION</p>
-      <span style="display: inline-block; margin-top: 14px; font-family: var(--font-sans); font-size: var(--fs-sm); font-weight: 600; color: var(--metis-blue);">Read the note &rarr;</span>
-    </a>
-    -->
-    <p id="metis-notes-empty" style="font-family: var(--font-sans); font-size: var(--fs-body); color: var(--text-faint); padding: 36px 0;">First note publishing shortly.</p>
+  <div class="metis-cards">
+      <a href="/blog/dpdp-sending-customer-data-to-ai-models/" class="metis-card">
+        <div class="metis-card-meta">
+          <time datetime="2026-08-16">16 August 2026</time>
+          <span aria-hidden="true">&middot;</span><span>7 min read</span>
+          <span class="metis-status metis-status--due">Full compliance 13 May 2027</span>
+        </div>
+        <h2>Can you send Indian customer data to OpenAI or Claude?</h2>
+        <p>India's DPDP framework permits cross-border transfer unless a country is restricted — and none is. What that means for teams building AI products.</p>
+        <span class="metis-card-go">Read the note &rarr;</span>
+      </a>
+      <a href="/blog/trai-140-1600-series-insurance-calls/" class="metis-card">
+        <div class="metis-card-meta">
+          <time datetime="2026-08-16">16 August 2026</time>
+          <span aria-hidden="true">&middot;</span><span>7 min read</span>
+          <span class="metis-status metis-status--live">In force since 15 Feb 2026</span>
+        </div>
+        <h2>140 or 1600: which number series must insurance calls use?</h2>
+        <p>Insurers had to move service calls to TRAI's 1600 series by 15 February 2026. Which series applies to renewals, and why 1600 lifts connect rates.</p>
+        <span class="metis-card-go">Read the note &rarr;</span>
+      </a>
+      <a href="/blog/questions-before-buying-ai-calling-india/" class="metis-card">
+        <div class="metis-card-meta">
+          <time datetime="2026-08-16">16 August 2026</time>
+          <span aria-hidden="true">&middot;</span><span>6 min read</span>
+          <span class="metis-status">Buyer's guide</span>
+        </div>
+        <h2>Ten questions to ask before buying an AI calling agent in India</h2>
+        <p>The questions that separate an AI voice system which survives real customers from one that does not — number series, interruptions, fallbacks and handoff.</p>
+        <span class="metis-card-go">Read the note &rarr;</span>
+      </a>
   </div>
+  <p class="metis-notes-more">Want the short version of how we work? See <a href="/services/">what we build</a>, <a href="/services/detailed/">every service in detail</a>, or <a href="/faq/">the FAQ</a>.</p>
   <div class="metis-article-footer-space"></div>
 </main>
 
@@ -201,15 +336,18 @@
   <div style="position: relative; overflow: hidden; background: var(--metis-cream); border-radius: var(--radius-xl); padding: clamp(32px, 5vw, 72px);">
     <div style="position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px;">
       <p class="metis-serif" style="font-size: var(--fs-serif-xl); line-height: 1.16; max-width: 12ch; color: var(--text-strong); margin: 0px;">We build AI that earns its place in your business, and grows with your team.</p>
-      <nav style="display: flex; flex-direction: column; gap: 16px; min-width: 160px;">
+      <nav aria-label="Footer" style="display: flex; flex-direction: column; gap: 16px; min-width: 160px;">
         <a href="/services/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Services</a>
+        <a href="/services/detailed/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Services in detail</a>
         <a href="/about/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">About us</a>
         <a href="/blog/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Notes</a>
+        <a href="/faq/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">FAQ</a>
         <a href="/contact/" style="color: var(--metis-grey-700); text-decoration: none; font-size: var(--fs-body); font-weight: 500;">Contact us</a>
       </nav>
     </div>
-    <div style="position: relative; z-index: 1; margin-top: 48px;">
-      <span style="display: inline-flex; align-items: center; gap: 8.84px;"><svg width="26" height="26" viewBox="0 0 100 100" fill="none" style="display: block;"><g stroke="var(--metis-blue)" stroke-width="6.5" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="20"></line><line x1="50" y1="50" x2="79" y2="41"></line><line x1="50" y1="50" x2="70" y2="78"></line><line x1="50" y1="50" x2="26" y2="70"></line></g><g fill="var(--metis-blue)"><circle cx="50" cy="20" r="8"></circle><circle cx="79" cy="41" r="8"></circle><circle cx="70" cy="78" r="8"></circle><circle cx="26" cy="70" r="8"></circle><circle cx="50" cy="50" r="10.5"></circle></g></svg><span style="font-family: var(--font-sans); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 15.6px; color: var(--text-strong); line-height: 1;">Metis</span></span>
+    <div class="metis-footer-base" style="position: relative; z-index: 1; margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;">
+      <span style="display: inline-flex; align-items: center; gap: 8.84px;"><svg width="26" height="26" viewBox="0 0 100 100" fill="none" aria-hidden="true" style="display: block;"><g stroke="var(--metis-blue)" stroke-width="6.5" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="20"></line><line x1="50" y1="50" x2="79" y2="41"></line><line x1="50" y1="50" x2="70" y2="78"></line><line x1="50" y1="50" x2="26" y2="70"></line></g><g fill="var(--metis-blue)"><circle cx="50" cy="20" r="8"></circle><circle cx="79" cy="41" r="8"></circle><circle cx="70" cy="78" r="8"></circle><circle cx="26" cy="70" r="8"></circle><circle cx="50" cy="50" r="10.5"></circle></g></svg><span style="font-family: var(--font-sans); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 15.6px; color: var(--text-strong); line-height: 1;">Metis</span></span>
+      <p style="margin: 0; font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-muted);">© 2026 METIS<span aria-hidden="true" style="margin: 0 10px;">·</span><a href="/privacy/" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">Privacy policy</a></p>
     </div>
   </div>
 </footer>
@@ -225,7 +363,9 @@
     var burger = document.getElementById("metis-burger");
     var menu = document.getElementById("metis-mobile-menu");
     burger.addEventListener("click", function () {
-      menu.style.display = menu.style.display === "none" ? "block" : "none";
+      var open = menu.style.display !== "none";
+      menu.style.display = open ? "none" : "block";
+      burger.setAttribute("aria-expanded", String(!open));
     });
   })();
 </script>
