@@ -352,7 +352,7 @@ function LogoCloud() {
     }
   }, "For ", /*#__PURE__*/React.createElement(A.Squiggle, {
     permanent: true
-  }, "five years"), ", we've partnered with 50+ clients across finance, healthcare, real estate, manufacturing, and more, delivering custom software that drives real results."), /*#__PURE__*/React.createElement("div", {
+  }, "three years"), ", we've partnered with 25+ clients across finance, healthcare, real estate, manufacturing, and more, delivering custom software that drives real results."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexWrap: "wrap",
