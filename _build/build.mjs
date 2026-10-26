@@ -124,8 +124,25 @@ function crumbs(items) {
   };
 }
 
+// Active nav link, the same way the React NavBar marks it: blue, weight 600.
+const NAV_KEYS = ["services", "about", "notes", "faq", "contact"];
+function navActive(canonical) {
+  if (canonical.includes("/blog/")) return "notes";
+  if (canonical.includes("/faq/")) return "faq";
+  return "";
+}
+
 function render({ title, description, canonical, ogType, ogTitle, jsonld, main, headExtra }) {
-  return shell
+  const active = navActive(canonical);
+  let page = shell;
+  for (const k of NAV_KEYS) {
+    const on = k === active;
+    page = page
+      .replace(`{{CUR_${k}}}`, on ? ' aria-current="page"' : "")
+      .replace(`{{C_${k}}}`, on ? "var(--metis-blue)" : "var(--text-strong)")
+      .replace(`{{W_${k}}}`, on ? "600" : "500");
+  }
+  return page
     .replace(/\{\{TITLE\}\}/g, esc(title))
     .replace(/\{\{OG_TITLE\}\}/g, esc(ogTitle ?? title))
     .replace(/\{\{DESCRIPTION\}\}/g, esc(description))
@@ -264,16 +281,18 @@ const cards = built
   )
   .join("\n");
 
-const indexMain = `<main id="metis-main" class="metis-article" style="max-width: 840px;">
-  <div class="metis-article-head">
+const indexMain = `<main id="metis-main">
+  <section class="metis-container metis-page-head"><div style="max-width: 62ch;">
     <p class="metis-eyebrow" style="margin: 0;">Writing from METIS</p>
-    <h1>Notes</h1>
-    <p style="font-family: var(--font-sans); font-size: var(--fs-lead); line-height: 1.55; color: var(--text-muted); margin: 0 0 8px; max-width: 54ch;">Practical writing on building AI products, customer data and what the rules in India actually say &mdash; from a team that ships AI to production.</p>
-  </div>
+    <h1><span class="metis-squig metis-squig--thin">Notes<span class="metis-squig__u" aria-hidden="true"><span class="metis-squig__f"></span></span></span>.</h1>
+    <p class="metis-page-lede">Practical writing on building AI products, customer data and what the rules in India actually say &mdash; from a team that ships AI to production.</p>
+  </div></section>
+  <section class="metis-container"><div style="max-width: 840px;">
   <div class="metis-cards">
 ${cards}
   </div>
   <p class="metis-notes-more">Want the short version of how we work? See <a href="/services/">what we build</a>, <a href="/services/detailed/">every service in detail</a>, or <a href="/faq/">the FAQ</a>.</p>
+  </div></section>
   <div class="metis-article-footer-space"></div>
 </main>`;
 
@@ -285,7 +304,7 @@ const indexStyles = `<style data-metis="cards">
     transition: opacity var(--dur-base) var(--ease-out);
   }
   .metis-card:hover { opacity: .72; }
-  .metis-card:hover h2 { color: var(--metis-blue); }
+  .metis-card:hover h2 { color: var(--text-accent); }
   .metis-card-meta {
     display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
     font-family: var(--font-sans); font-size: var(--fs-sm);
@@ -304,11 +323,11 @@ const indexStyles = `<style data-metis="cards">
     font-family: var(--font-sans); font-size: var(--fs-body); line-height: 1.6;
     color: var(--text-muted); margin: 30px 0 0;
   }
-  .metis-notes-more a { color: var(--metis-blue); text-decoration: none; font-weight: 500; }
+  .metis-notes-more a { color: var(--text-link); text-decoration: none; font-weight: 500; }
   .metis-notes-more a:hover { text-decoration: underline; }
   .metis-card-go {
     display: inline-block; margin-top: 15px; font-family: var(--font-sans);
-    font-size: var(--fs-sm); font-weight: 600; color: var(--metis-blue);
+    font-size: var(--fs-sm); font-weight: 600; color: var(--text-link);
   }
 </style>`;
 
@@ -353,18 +372,18 @@ const faqBody = frag("faq");
 const faqItems = faqFromBlocks(faqBody);
 
 const faqStyles = `<style data-metis="faqpage">
-  .metis-faqpage { max-width: 1080px; margin-inline: auto; padding-inline: 24px; }
-  .metis-faqpage-head { padding-top: clamp(40px, 6vh, 72px); max-width: 720px; }
+  .metis-faqpage { max-width: 1200px; margin-inline: auto; padding-inline: 32px; }
+  .metis-faqpage-head { padding-top: clamp(48px, 7vh, 88px); max-width: 62ch; }
   .metis-faqpage-head h1 {
     font-family: var(--font-sans); font-weight: 600;
-    font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.06;
-    letter-spacing: -0.028em; color: var(--text-strong); margin: 18px 0 18px;
+    font-size: clamp(2.5rem, 5.4vw, 4.5rem); line-height: 1.03;
+    letter-spacing: -0.025em; color: var(--text-strong); margin: 18px 0 22px;
   }
   .metis-faqpage-lede {
     font-family: var(--font-sans); font-size: var(--fs-lead); line-height: 1.55;
     color: var(--text-muted); margin: 0; max-width: 54ch;
   }
-  .metis-faqpage-lede a { color: var(--metis-blue); text-decoration: none; font-weight: 500; }
+  .metis-faqpage-lede a { color: var(--text-link); text-decoration: none; font-weight: 500; }
   .metis-faqpage-lede a:hover { text-decoration: underline; }
   .metis-faqpage-stamp {
     font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-faint);
@@ -384,13 +403,13 @@ const faqStyles = `<style data-metis="faqpage">
     padding: 7px 0 7px 14px; border-left: 2px solid var(--border-hair);
     transition: color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
   }
-  .metis-faqpage-nav a:hover { color: var(--metis-blue); border-left-color: var(--metis-blue); }
+  .metis-faqpage-nav a:hover { color: var(--text-accent); border-left-color: var(--text-accent); }
 
   .metis-qsec { padding-top: 8px; scroll-margin-top: 96px; }
   .metis-qsec + .metis-qsec { margin-top: 62px; }
   .metis-qsec > h2 {
     font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500;
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--metis-blue);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-accent);
     margin: 0 0 26px; padding-bottom: 14px; border-bottom: 1px solid var(--border-hair);
   }
   .metis-q { padding: 0 0 34px; max-width: 66ch; }
@@ -411,7 +430,7 @@ const faqStyles = `<style data-metis="faqpage">
     color: var(--text-strong); margin: 0 0 14px;
   }
   .metis-q p:last-child { margin-bottom: 0; }
-  .metis-q a { color: var(--metis-blue); text-decoration: none; font-weight: 500; }
+  .metis-q a { color: var(--text-link); text-decoration: none; font-weight: 500; }
   .metis-q a:hover { text-decoration: underline; }
 
   @media (min-width: 940px) {

@@ -66,3 +66,28 @@
 
   --focus-ring:       var(--metis-blue);
 }
+
+/* ---- Accent text: shared by the React pages and the static pages ---- */
+:root { --text-accent: var(--metis-blue); }
+
+/* Dark mode. The brand blue (#1c46ff) and the eyebrow rust (#b03e18) stay as
+   they are for surfaces and the logo, but as TEXT on the dark ground they reach
+   only 2.98 and 3.14. These are the same hues, lifted just enough to pass 4.5
+   on both #14130f and the #1c1a15 cards (blue 5.1 / 4.8, rust 5.2 / 4.8). */
+[data-theme="dark"] {
+  --eyebrow:     #e35c2f;
+  --text-accent: #5e7cff;
+  --text-link:   #8da5ff;
+}
+/* Blue text set inline (active nav link, stats, numbering, tags). Matches
+   "color: var(--metis-blue)" but not background-color or border-color. */
+[data-theme="dark"] [style^="color: var(--metis-blue)"],
+[data-theme="dark"] [style*=" color: var(--metis-blue)"],
+[data-theme="dark"] [style*=";color: var(--metis-blue)"] { color: var(--text-accent) !important; }
+
+/* ---- Contrast fixes on coloured surfaces (both themes) ---- */
+/* Orange case card: white on #f0562e is 3.5:1. Ink on the same orange is 5.6. */
+.metis-card.metis-card--orange { color: var(--metis-ink); }
+[data-theme="dark"] .metis-card.metis-card--orange .metis-badge--soft { background: rgba(14,14,15,.82) !important; color: #f3efe4 !important; }
+/* Discovery Sprint label: terracotta on cream is 4.3:1; the eyebrow rust passes in both themes. */
+.metis-sprint [style*="color: var(--metis-rust)"] { color: var(--eyebrow) !important; }
