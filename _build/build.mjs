@@ -46,11 +46,11 @@ const NOTES = [
     h1: "140 or 1600: which number series must insurance calls use?",
     title: "METIS | 140 or 1600: which series must insurance calls use?",
     description:
-      "TRAI restricted ordinary 10-digit numbers for commercial calling from 1 January 2026. Which series applies to renewals, and why 1600 lifts connect rates.",
+      "Insurers had to move service calls to TRAI's 1600 series by 15 February 2026. Which series applies to renewals, and why 1600 lifts connect rates.",
     dateISO: "2026-08-16",
     dateHuman: "16 August 2026",
-    modifiedISO: "2026-10-15",
-    status: { label: "In force since 1 Jan 2026", kind: "live" },
+    modifiedISO: "2026-10-26",
+    status: { label: "In force since 15 Feb 2026", kind: "live" },
     kicker: "TCCCPR",
     related: [
       { href: "/services/detailed/#agentic-systems", label: "Agentic Systems: the voice and conversational agents we build" },
@@ -65,7 +65,7 @@ const NOTES = [
       "The questions that separate an AI voice system which survives real customers from one that does not — number series, interruptions, fallbacks and handoff.",
     dateISO: "2026-08-16",
     dateHuman: "16 August 2026",
-    modifiedISO: "2026-10-15",
+    modifiedISO: "2026-10-26",
     status: { label: "Buyer's guide", kind: "" },
     kicker: "Buying",
     related: [
@@ -527,7 +527,7 @@ const urls = [
   { loc: `${SITE}/faq/`, mod: SEO_PASS },
   { loc: `${SITE}/blog/`, mod: SEO_PASS },
   { loc: `${SITE}/privacy/`, mod: SEO_PASS },
-  ...built.map((n) => ({ loc: n.url, mod: n.lastmod || SEO_PASS })),
+  ...built.map((n) => ({ loc: n.url, mod: n.lastmod || n.modifiedISO || SEO_PASS })),
 ];
 
 emit(
